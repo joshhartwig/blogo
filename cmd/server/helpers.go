@@ -11,8 +11,9 @@ func (c *config) render(w http.ResponseWriter, name string, data any) error {
 		return errors.New("template not found")
 	}
 
-	err := v.ExecuteTemplate(w, name, data)
+	err := v.ExecuteTemplate(w, "base", data)
 	if err != nil {
+
 		return err
 	}
 	return nil

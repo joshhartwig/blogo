@@ -1,0 +1,183 @@
+/* Root variables for easy theming */
+:root {
+  --background: #f8fafc;
+  --foreground: #18181b;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --border: #e5e7eb;
+  --card-bg: #fff;
+  --muted: #64748b;
+  --radius: 0.75rem;
+  --shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+  --font-sans: 'Inter', 'Ubuntu Mono', system-ui, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+main {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+header, nav {
+  max-width: 700px;
+  margin: 2rem auto 0 auto;
+  display: flex;
+  flex-direction: row;
+  gap: 1.5 rem;
+  list-style: none;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 1rem 2rem;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  margin: 0;
+  padding: 0;
+}
+
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 1.5rem;
+  transition: color 0.2s;
+}
+
+nav a:first-child {
+  margin-left: 0;
+}
+
+nav a:hover,
+nav a.active {
+  color: var(--primary);
+}
+
+h1, h2, h3, h4, h5 {
+  color: var(--foreground);
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin: 1rem 0;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+button,
+input[type="submit"] {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.6em 1.2em;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: var(--shadow);
+}
+
+button:hover,
+input[type="submit"]:hover {
+  background: var(--primary-hover);
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+code, pre {
+  font-family: 'Ubuntu Mono', 'Fira Mono', monospace;
+  background: #f1f5f9;
+  color: #334155;
+  border-radius: 0.5rem;
+  padding: 0.2em 0.4em;
+}
+
+pre {
+  padding: 1em;
+  overflow-x: auto;
+}
+
+blockquote {
+  border-left: 4px solid var(--primary);
+  background: #f1f5f9;
+  color: var(--muted);
+  margin: 1.5em 0;
+  padding: 1em 1.5em;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+ul, ol {
+  padding-left: 2rem;
+}
+
+img {
+  max-width: 100%;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.5rem 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
