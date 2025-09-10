@@ -12,9 +12,12 @@ import (
 )
 
 type config struct {
-	port     string
-	logger   *slog.Logger
-	tplCache map[string]*template.Template
+	port string
+}
+
+type application struct {
+	templateCache map[string]*template.Template
+	logger        *slog.Logger
 }
 
 // TODO: template is rendering if the template name is home.html not home... why
@@ -26,27 +29,29 @@ func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{AddSource: false}))
 
 	cfg := config{
-		port:   fmt.Sprintf(":%d", *port),
-		logger: logger,
-	}
-
-	srv := http.Server{
-		Addr:    cfg.port,
-		Handler: cfg.routes(),
+		port: fmt.Sprintf(":%d", *port),
 	}
 
 	templateCache, err := TemplateCache()
 	if err != nil {
-		cfg.logger.Error("error", err.Error(), "error parsing template cache")
+		fmt.Println("unable to create template cache, exiting to OS")
 		os.Exit(1)
 	}
 
-	cfg.tplCache = templateCache
+	app := application{
+		logger:        logger,
+		templateCache: templateCache,
+	}
+
+	srv := http.Server{
+		Addr:    cfg.port,
+		Handler: app.routes(),
+	}
 
 	fmt.Printf("starting server on port%s\n", cfg.port)
 	err = srv.ListenAndServe()
 	if err != nil {
-		cfg.logger.Error("Fatal Error:", err.Error(), time.Now())
+		app.logger.Error("Fatal Error:", err.Error(), time.Now())
 		fmt.Println(err)
 		os.Exit(1)
 	}

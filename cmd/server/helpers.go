@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-func (c *config) render(w http.ResponseWriter, name string, data any) error {
-	v, ok := c.tplCache[name]
+func (app *application) render(w http.ResponseWriter, name string, data any) error {
+	v, ok := app.templateCache[name]
 	if !ok {
 		return errors.New("template not found")
 	}
