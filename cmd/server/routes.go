@@ -9,7 +9,7 @@ func (app *application) routes() http.Handler {
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	router.Handle("GET /static/", http.StripPrefix("/static", fileServer))
-
+	router.Handle("/posts/{slug}", http.HandlerFunc(app.postHandler))
 	router.Handle("/", app.middleware(http.HandlerFunc(app.homeHandler)))
 
 	return router

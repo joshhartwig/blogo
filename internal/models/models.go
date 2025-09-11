@@ -1,8 +1,11 @@
 package models
 
-import "time"
-
 type TemplateData struct {
-	Title       string
-	PublishDate time.Time
+	Title    string
+	Articles []Article
+}
+
+type Article struct {
+	Title   string
+	Content []byte
 }
