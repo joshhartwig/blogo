@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"net/http"
@@ -8,9 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gomarkdown/markdown"
-	"github.com/gomarkdown/markdown/html"
-	"github.com/gomarkdown/markdown/parser"
+	"github.com/yuin/goldmark"
 )
 
 func (app *application) render(w http.ResponseWriter, name string, data any) error {
@@ -27,39 +26,44 @@ func (app *application) render(w http.ResponseWriter, name string, data any) err
 	return nil
 }
 
-func readMarkdownContent() (map[string][]byte, error) {
-	markdown := make(map[string][]byte)
-	dir, _ := os.Getwd()
-	fmt.Println(dir)
+func readMarkdownContent() (map[string]*bytes.Buffer, error) {
+	fmt.Println("starting read markdown content")
+	markdown := make(map[string]*bytes.Buffer)
 	files, err := filepath.Glob("./content/*.md")
-	fmt.Println("found files:", files)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, file := range files {
+		if file == "" {
+			return markdown, errors.New("empty file name")
+		}
+		fmt.Println("processing ", file)
 		filename := filepath.Base(file)             // get just the base file example.html
 		name := strings.TrimSuffix(filename, ".md") // get the title name for the map
-		bytes, err := os.ReadFile(file)
+		data, err := os.ReadFile(file)
 		if err != nil {
 			return nil, err
 		}
 
-		markdown[name] = convertMarkdownToHtml(bytes) // add to map and convert mardown to html
+		fmt.Println("converting to markdown")
+		buf, err := convertMarkdownToHtml(data)
+		if err != nil {
+			return nil, err
+		}
+		markdown[name] = buf
 	}
 
 	return markdown, nil
 }
 
-// converts markdown content to html
-func convertMarkdownToHtml(md []byte) []byte {
-	extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
-	p := parser.NewWithExtensions(extensions)
-	doc := p.Parse(md)
+// converts markdown content in byte format to html and returns a buffer
+func convertMarkdownToHtml(md []byte) (*bytes.Buffer, error) {
+	var out bytes.Buffer
+	err := goldmark.Convert(md, &out)
+	if err != nil {
+		return &out, err
+	}
 
-	htmlFlags := html.CommonFlags | html.HrefTargetBlank
-	opts := html.RendererOptions{Flags: htmlFlags}
-	render := html.NewRenderer(opts)
-
-	return markdown.Render(doc, render)
+	return &out, nil
 }

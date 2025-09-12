@@ -1,5 +1,7 @@
 package models
 
+import "html/template"
+
 type TemplateData struct {
 	Title    string
 	Articles []Article
@@ -8,4 +10,9 @@ type TemplateData struct {
 type Article struct {
 	Title   string
 	Content []byte
+}
+
+type Post struct {
+	Title   string
+	Content template.HTML
 }

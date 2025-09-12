@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"html/template"
@@ -17,7 +18,7 @@ type config struct {
 
 type application struct {
 	templateCache map[string]*template.Template
-	markdownCache map[string][]byte
+	markdownCache map[string]*bytes.Buffer
 	logger        *slog.Logger
 }
 
@@ -37,7 +38,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	articles, _ := readMarkdownContent()
+	articles, err := readMarkdownContent()
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	app := application{
 		logger:        logger,
