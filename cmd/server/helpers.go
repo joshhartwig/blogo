@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/yuin/goldmark"
+	"go.abhg.dev/goldmark/frontmatter"
 )
 
 func (app *application) render(w http.ResponseWriter, name string, data any) error {
@@ -57,10 +58,14 @@ func readMarkdownContent() (map[string]*bytes.Buffer, error) {
 	return markdown, nil
 }
 
+// TODO: parse the front matter, may need a new struct that contains the markdown and frontmatter and store
+// that in a map[string]*Post with Post containing md bytes.buffer & frontmatter then have this function parse both
+// need to find better way to newing up goldmark each time
 // converts markdown content in byte format to html and returns a buffer
 func convertMarkdownToHtml(md []byte) (*bytes.Buffer, error) {
 	var out bytes.Buffer
-	err := goldmark.Convert(md, &out)
+	gm := goldmark.New(goldmark.WithExtensions(&frontmatter.Extender{}))
+	err := gm.Convert(md, &out)
 	if err != nil {
 		return &out, err
 	}

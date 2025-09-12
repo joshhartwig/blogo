@@ -40,7 +40,7 @@ func main() {
 
 	articles, err := readMarkdownContent()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error reading markdown content: ", err)
 	}
 
 	app := application{

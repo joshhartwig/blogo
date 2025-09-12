@@ -3,16 +3,17 @@ package models
 import "html/template"
 
 type TemplateData struct {
-	Title    string
-	Articles []Article
-}
-
-type Article struct {
-	Title   string
-	Content []byte
+	Title string
+	Posts []Post
 }
 
 type Post struct {
-	Title   string
-	Content template.HTML
+	Metadata PostMetadata
+	Content  template.HTML
+}
+
+type PostMetadata struct {
+	Title string   `yaml:"title"`
+	Tags  []string `yaml:"tags"`
+	Desc  string   `yaml:"description"`
 }
