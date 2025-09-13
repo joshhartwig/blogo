@@ -4,12 +4,15 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"html/template"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/joshhartwig/blogo/internal/models"
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/parser"
 	"go.abhg.dev/goldmark/frontmatter"
 )
 
@@ -27,48 +30,59 @@ func (app *application) render(w http.ResponseWriter, name string, data any) err
 	return nil
 }
 
-func readMarkdownContent() (map[string]*bytes.Buffer, error) {
+func readMarkdownContent() (map[string]models.Post, error) {
 	fmt.Println("starting read markdown content")
-	markdown := make(map[string]*bytes.Buffer)
+	markdown := make(map[string]models.Post)
 	files, err := filepath.Glob("./content/*.md")
 	if err != nil {
 		return nil, err
 	}
 
-	for _, file := range files {
+	for i, file := range files {
+		fmt.Printf("processing markdown file %d: %s \n", i, file)
 		if file == "" {
+			fmt.Printf("file name is empty returning")
 			return markdown, errors.New("empty file name")
 		}
-		fmt.Println("processing ", file)
+
 		filename := filepath.Base(file)             // get just the base file example.html
 		name := strings.TrimSuffix(filename, ".md") // get the title name for the map
-		data, err := os.ReadFile(file)
+		data, err := os.ReadFile(file)              // read the file into a []byte
 		if err != nil {
 			return nil, err
 		}
 
-		fmt.Println("converting to markdown")
-		buf, err := convertMarkdownToHtml(data)
+		post, err := convertMarkdownToHtml(data) // convert the markdown file into a post struct
 		if err != nil {
 			return nil, err
 		}
-		markdown[name] = buf
+		markdown[name] = post
 	}
 
 	return markdown, nil
 }
 
-// TODO: parse the front matter, may need a new struct that contains the markdown and frontmatter and store
-// that in a map[string]*Post with Post containing md bytes.buffer & frontmatter then have this function parse both
-// need to find better way to newing up goldmark each time
-// converts markdown content in byte format to html and returns a buffer
-func convertMarkdownToHtml(md []byte) (*bytes.Buffer, error) {
-	var out bytes.Buffer
+func convertMarkdownToHtml(data []byte) (models.Post, error) {
+	post := models.Post{}
+	meta := models.PostMetadata{}
+
+	out := bytes.Buffer{}
 	gm := goldmark.New(goldmark.WithExtensions(&frontmatter.Extender{}))
-	err := gm.Convert(md, &out)
+	ctx := parser.NewContext()
+
+	err := gm.Convert(data, &out, parser.WithContext(ctx))
 	if err != nil {
-		return &out, err
+		return post, err
 	}
 
-	return &out, nil
+	d := frontmatter.Get(ctx)
+
+	if err := d.Decode(&meta); err != nil {
+		return post, err
+	}
+
+	post.Content = template.HTML(out.String())
+	post.Metadata = meta
+
+	return post, nil
 }

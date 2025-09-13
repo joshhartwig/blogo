@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"html/template"
@@ -10,6 +9,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/joshhartwig/blogo/internal/models"
 )
 
 type config struct {
@@ -18,7 +19,7 @@ type config struct {
 
 type application struct {
 	templateCache map[string]*template.Template
-	markdownCache map[string]*bytes.Buffer
+	markdownCache map[string]models.Post
 	logger        *slog.Logger
 }
 

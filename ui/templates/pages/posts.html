@@ -1,9 +1,12 @@
-{{define "title"}}Post{{end}}
+{{define "title"}}{{.Metadata.Title}}{{end}}
 
 {{define "main"}}
 <section class="blog-list">
   <article class="card">
-    {{.}}
+    <h1>{{.Metadata.Title}}</h1>
+    <div class="content">
+      {{.Content}}
+    </div>
   </article>
 </section>
 {{end}}

@@ -2,10 +2,7 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
-
-	"github.com/joshhartwig/blogo/internal/models"
 )
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
@@ -33,21 +30,18 @@ func (app *application) middleware(next http.Handler) http.Handler {
 
 func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
 	slug := r.PathValue("slug")
+	fmt.Printf("in postHandler found slug %s\n", slug)
 	if slug == "" {
 		http.Redirect(w, r, "/", http.StatusNoContent)
 		return
 	}
 
-	data, ok := app.markdownCache[slug]
+	post, ok := app.markdownCache[slug]
 	if !ok {
 		fmt.Println("post not found, redirecting")
 		http.Redirect(w, r, "/", http.StatusNoContent)
 		return
 	}
 
-	post := models.Post{
-		Content: template.HTML(data.String()),
-	}
-
-	app.render(w, "posts", post.Content)
+	app.render(w, "posts", post)
 }
