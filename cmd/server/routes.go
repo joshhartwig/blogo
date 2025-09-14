@@ -11,6 +11,7 @@ func (app *application) routes() http.Handler {
 	router.Handle("GET /static/", http.StripPrefix("/static", fileServer))
 	router.Handle("/posts/{slug}", http.HandlerFunc(app.postHandler))
 	router.Handle("/", app.middleware(http.HandlerFunc(app.homeHandler)))
+	router.Handle("/notfound", http.HandlerFunc(app.notFoundHandler))
 
 	return router
 }

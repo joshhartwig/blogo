@@ -11,7 +11,7 @@
     {{range .Posts}}
       <article class="card">
         <h2><a href="#">{{.Metadata.Title}}</a></h2>
-        <p class="meta">Posted on September 9, 2025 &middot; 5 min read</p>
+        <p class="meta">Posted on September 9, 2025 &middot; {{.Metadata.ReadingDuration}} min read</p>
         <p>{{.Metadata.Desc}}</p>
         <a href="/posts/{{.Metadata.Slug}}" class="read-more">Read more &rarr;</a>
       </article>

@@ -17,9 +17,11 @@ import (
 	"go.abhg.dev/goldmark/frontmatter"
 )
 
+// render executes a template with the passed in data
 func (app *application) render(w http.ResponseWriter, name string, data any) error {
 	v, ok := app.templateCache[name]
 	if !ok {
+		app.logger.Error("template not found")
 		return errors.New("template not found")
 	}
 
@@ -31,6 +33,8 @@ func (app *application) render(w http.ResponseWriter, name string, data any) err
 	return nil
 }
 
+// readMarkdownContent reads the local content directory for .md files, converts them to a Post struct and
+// adds them to a template cache
 func readMarkdownContent() (map[string]models.Post, error) {
 	fmt.Println("starting read markdown content")
 	markdown := make(map[string]models.Post)
@@ -57,7 +61,7 @@ func readMarkdownContent() (map[string]models.Post, error) {
 		if err != nil {
 			return nil, err
 		}
-		markdown[name] = post
+		markdown[name] = post // add markdown to cache
 	}
 
 	return markdown, nil
@@ -92,14 +96,12 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 
 // calculateDuration estimates the reading duration in minutes for the given content string.
 // It assumes an average reading speed of 200 words per minute.
-// The function returns the rounded duration as an integer.
-// If the content is empty, it returns 0.
 func calculateDuration(content string) int {
 	const wordsPerMinute = 200
 
 	words := strings.Fields(content)
 	if len(words) == 0 {
-		return 0
+		return 1
 	}
 
 	duration := float64(len(words)) / float64(wordsPerMinute)
