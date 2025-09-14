@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"math"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -83,7 +84,24 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 
 	post.Content = template.HTML(out.String())
 	post.Metadata = meta
-	post.Metadata.Slug = slug // add the slug
+	post.Metadata.ReadingDuration = calculateDuration(out.String()) // calculate reading duration
+	post.Metadata.Slug = slug                                       // add the slug
 
 	return post, nil
+}
+
+// calculateDuration estimates the reading duration in minutes for the given content string.
+// It assumes an average reading speed of 200 words per minute.
+// The function returns the rounded duration as an integer.
+// If the content is empty, it returns 0.
+func calculateDuration(content string) int {
+	const wordsPerMinute = 200
+
+	words := strings.Fields(content)
+	if len(words) == 0 {
+		return 0
+	}
+
+	duration := float64(len(words)) / float64(wordsPerMinute)
+	return int(math.Round(duration))
 }

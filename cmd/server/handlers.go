@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/joshhartwig/blogo/internal/models"
 )
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
@@ -10,17 +12,16 @@ func (app *application) ping(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
+	td := models.TemplateData{}
+	for _, p := range app.markdownCache {
+		td.Posts = append(td.Posts, p)
+	}
 
-	// for title, p := range app.markdownCache {
-
-	// }
-
-	err := app.render(w, "home", nil)
-
-	if err != nil {
+	if err := app.render(w, "home", td); err != nil {
 		app.logger.Error("error rendering template", err.Error(), "error")
 		http.Error(w, "error rendering template", http.StatusInternalServerError)
 	}
+
 }
 
 // middleware outputs the method and uri the request is hitting on the server

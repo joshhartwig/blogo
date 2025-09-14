@@ -2,8 +2,8 @@
 
 {{define "main"}}
 <section class="blog-header">
-  <h1>Welcome to My Blog</h1>
-  <p class="subtitle">Thoughts, tutorials, and stories on web development and technology.</p>
+  <h1>Welcome to Josh's Blog</h1>
+  <p class="subtitle">25 years in IT. Thoughts, tutorials, opions. Don't take me srs!</p>
 </section>
 
 <section class="blog-list">
@@ -13,7 +13,7 @@
         <h2><a href="#">{{.Metadata.Title}}</a></h2>
         <p class="meta">Posted on September 9, 2025 &middot; 5 min read</p>
         <p>{{.Metadata.Desc}}</p>
-        <a href="#" class="read-more">Read more &rarr;</a>
+        <a href="/posts/{{.Metadata.Slug}}" class="read-more">Read more &rarr;</a>
       </article>
     {{end}}
   {{else}}
