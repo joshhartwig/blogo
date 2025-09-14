@@ -52,7 +52,7 @@ func readMarkdownContent() (map[string]models.Post, error) {
 			return nil, err
 		}
 
-		post, err := convertMarkdownToHtml(data) // convert the markdown file into a post struct
+		post, err := convertMarkdownToHtml(name, data) // convert the markdown file into a post struct
 		if err != nil {
 			return nil, err
 		}
@@ -62,7 +62,7 @@ func readMarkdownContent() (map[string]models.Post, error) {
 	return markdown, nil
 }
 
-func convertMarkdownToHtml(data []byte) (models.Post, error) {
+func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 	post := models.Post{}
 	meta := models.PostMetadata{}
 
@@ -83,6 +83,7 @@ func convertMarkdownToHtml(data []byte) (models.Post, error) {
 
 	post.Content = template.HTML(out.String())
 	post.Metadata = meta
+	post.Metadata.Slug = slug // add the slug
 
 	return post, nil
 }

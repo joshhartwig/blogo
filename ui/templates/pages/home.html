@@ -7,30 +7,17 @@
 </section>
 
 <section class="blog-list">
-  <article class="card">
-    <h2><a href="#">Getting Started with Go Templates</a></h2>
-    <p class="meta">Posted on September 9, 2025 &middot; 5 min read</p>
-    <p>
-      Learn how to use Go's html/template package to build dynamic, secure web pages with reusable layouts and partials.
-    </p>
-    <a href="#" class="read-more">Read more &rarr;</a>
-  </article>
-  <article class="card">
-    <h2><a href="#">Modern CSS for Clean Blog Layouts</a></h2>
-    <p class="meta">Posted on September 1, 2025 &middot; 4 min read</p>
-    <p>
-      Explore modern CSS techniques and variables to create beautiful, responsive blog designs inspired by shadcn/ui.
-    </p>
-    <a href="#" class="read-more">Read more &rarr;</a>
-  </article>
-  <article class="card">
-    <h2><a href="#">Serving Static Files in Go</a></h2>
-    <p class="meta">Posted on August 25, 2025 &middot; 3 min read</p>
-    <p>
-      A quick guide to serving CSS, JavaScript, and images efficiently in your Go web applications.
-    </p>
-    <a href="#" class="read-more">Read more &rarr;</a>
-  </article>
+  {{if .Posts}}
+    {{range .Posts}}
+      <article class="card">
+        <h2><a href="#">{{.Metadata.Title}}</a></h2>
+        <p class="meta">Posted on September 9, 2025 &middot; 5 min read</p>
+        <p>{{.Metadata.Desc}}</p>
+        <a href="#" class="read-more">Read more &rarr;</a>
+      </article>
+    {{end}}
+  {{else}}
+    <h2>No posts found</h2>
+  {{end}}
 </section>
-
 {{end}}

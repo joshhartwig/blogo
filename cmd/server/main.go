@@ -39,7 +39,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	articles, err := readMarkdownContent()
+	// fetch posts from content folder
+	posts, err := readMarkdownContent()
 	if err != nil {
 		fmt.Println("Error reading markdown content: ", err)
 	}
@@ -47,7 +48,7 @@ func main() {
 	app := application{
 		logger:        logger,
 		templateCache: templateCache,
-		markdownCache: articles,
+		markdownCache: posts,
 	}
 
 	srv := http.Server{

@@ -1,6 +1,9 @@
 package models
 
-import "html/template"
+import (
+	"html/template"
+	"time"
+)
 
 type TemplateData struct {
 	Title string
@@ -13,7 +16,9 @@ type Post struct {
 }
 
 type PostMetadata struct {
-	Title string   `yaml:"title"`
-	Tags  []string `yaml:"tags"`
-	Desc  string   `yaml:"description"`
+	Title string    `yaml:"title"`
+	Date  time.Time `yaml:"date"`
+	Tags  []string  `yaml:"tags"`
+	Desc  string    `yaml:"description"`
+	Slug  string
 }

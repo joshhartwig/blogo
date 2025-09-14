@@ -11,6 +11,10 @@ func (app *application) ping(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
 
+	// for title, p := range app.markdownCache {
+
+	// }
+
 	err := app.render(w, "home", nil)
 
 	if err != nil {
@@ -29,7 +33,7 @@ func (app *application) middleware(next http.Handler) http.Handler {
 }
 
 func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
-	slug := r.PathValue("slug")
+	slug := r.PathValue("slug") // fetch the slug
 	fmt.Printf("in postHandler found slug %s\n", slug)
 	if slug == "" {
 		http.Redirect(w, r, "/", http.StatusNoContent)
