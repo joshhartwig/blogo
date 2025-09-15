@@ -52,8 +52,12 @@ func main() {
 	}
 
 	srv := http.Server{
-		Addr:    cfg.port,
-		Handler: app.routes(),
+		Addr:         cfg.port,
+		Handler:      app.routes(),
+		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	fmt.Printf("Starting server on port%s\n", cfg.port)

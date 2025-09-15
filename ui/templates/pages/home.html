@@ -10,8 +10,15 @@
   {{if .Posts}}
     {{range .Posts}}
       <article class="card">
-        <h2><a href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a></h2>
-        <p class="meta">Posted on September 9, 2025 &middot; {{.Metadata.ReadingDuration}} min read</p>
+        <h2><a href="/posts/{{.Metadata.Slug}}" class="post-title-link">{{.Metadata.Title}}</a></h2>
+        <p class="meta">
+          Posted on September 9, 2025 &middot; {{.Metadata.ReadingDuration}} min read
+        </p>
+        <div class="tags">
+          {{range .Metadata.Tags}}
+            <span class="tag">{{.}}</span>
+          {{end}}
+        </div>
         <p>{{.Metadata.Summary}}</p>
         <a href="/posts/{{.Metadata.Slug}}" class="read-more">Read more &rarr;</a>
       </article>

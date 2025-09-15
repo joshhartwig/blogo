@@ -7,6 +7,7 @@ import (
 	"github.com/joshhartwig/blogo/internal/models"
 )
 
+// ping is used for testing endpoints to ensure handlers are working
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("pong"))
 }
@@ -65,9 +66,13 @@ func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
 	post, ok := app.markdownCache[slug]
 	if !ok {
 		fmt.Println("post not found, redirecting")
-		http.Redirect(w, r, "/notfound", http.StatusPermanentRedirect)
+		http.Redirect(w, r, "/notfound", http.StatusSeeOther)
 		return
 	}
 
 	app.render(w, "posts", post)
+}
+
+func (app *application) projectsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("not implemented"))
 }
