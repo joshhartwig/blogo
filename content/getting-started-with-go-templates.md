@@ -1,7 +1,10 @@
 ---
 title: "Getting Started with Go Templates"
-date: 2025-09-09
+date: 2025-09-08
 summary: "Learn how to use Go's html/template package to build dynamic, secure web pages with reusable layouts and partials."
+tags:
+  - "#Go"
+  - "#Development"
 ---
 
 Go's html/template package is a powerful tool for building web applications. In this post, we'll cover the basics of templates, layouts, and partials in Go.

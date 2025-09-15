@@ -2,6 +2,9 @@
 title: "Serving Static Files in Go"
 date: 2025-08-25
 summary: "A quick guide to serving CSS, JavaScript, and images efficiently in your Go web applications."
+tags:
+  - "#Webdev"
+  - "#Development"
 ---
 
 Serving static files is essential for any web app. Go makes this easy with the http.FileServer function.

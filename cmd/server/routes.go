@@ -12,6 +12,7 @@ func (app *application) routes() http.Handler {
 	router.Handle("/posts/{slug}", http.HandlerFunc(app.postHandler))
 	router.Handle("/", app.middleware(http.HandlerFunc(app.homeHandler)))
 	router.Handle("/notfound", http.HandlerFunc(app.notFoundHandler))
+	router.Handle("/about", http.HandlerFunc(app.aboutHandler))
 
 	return router
 }

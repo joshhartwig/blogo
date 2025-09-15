@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/joshhartwig/blogo/internal/models"
@@ -86,8 +87,8 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 		return post, err
 	}
 
-	post.Content = template.HTML(out.String())
-	post.Metadata = meta
+	post.Content = template.HTML(out.String())                      // add content to the post
+	post.Metadata = meta                                            // add the frontmatter
 	post.Metadata.ReadingDuration = calculateDuration(out.String()) // calculate reading duration
 	post.Metadata.Slug = slug                                       // add the slug
 
@@ -106,4 +107,11 @@ func calculateDuration(content string) int {
 
 	duration := float64(len(words)) / float64(wordsPerMinute)
 	return int(math.Round(duration))
+}
+
+// sortPostsByDate likely does not work :( TODO: Fix
+func sortPostsByDate(posts []models.Post) {
+	slices.SortFunc(posts, func(a models.Post, b models.Post) int {
+		return a.Metadata.Date.Compare(b.Metadata.Date)
+	})
 }

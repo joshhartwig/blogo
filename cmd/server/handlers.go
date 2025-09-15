@@ -42,6 +42,14 @@ func (app *application) middleware(next http.Handler) http.Handler {
 	})
 }
 
+// about handler renders the about page
+func (app *application) aboutHandler(w http.ResponseWriter, r *http.Request) {
+	if err := app.render(w, "about", nil); err != nil {
+		app.logger.Error("render failed", "error", err, "handler", "about")
+		return
+	}
+}
+
 // postHandler renders our post content assuming the slug is found
 func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
 	slug := r.PathValue("slug") // fetch the slug
