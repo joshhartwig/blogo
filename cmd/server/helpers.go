@@ -109,9 +109,15 @@ func calculateDuration(content string) int {
 	return int(math.Round(duration))
 }
 
-// sortPostsByDate likely does not work :( TODO: Fix
+// Sort posts by date
 func sortPostsByDate(posts []models.Post) {
 	slices.SortFunc(posts, func(a models.Post, b models.Post) int {
-		return a.Metadata.Date.Compare(b.Metadata.Date)
+		if a.Metadata.Date.Before(b.Metadata.Date) {
+			return -1
+		}
+		if a.Metadata.Date.After(b.Metadata.Date) {
+			return 1
+		}
+		return 0
 	})
 }

@@ -27,6 +27,8 @@ func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
 		td.Posts = append(td.Posts, p)
 	}
 
+	sortPostsByDate(td.Posts) // sort posts by date
+
 	if err := app.render(w, "home", td); err != nil {
 		app.logger.Error("error rendering template", err.Error(), "error")
 		http.Error(w, "error rendering template", http.StatusInternalServerError)
@@ -53,8 +55,9 @@ func (app *application) aboutHandler(w http.ResponseWriter, r *http.Request) {
 // postHandler renders our post content assuming the slug is found
 func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
 	slug := r.PathValue("slug") // fetch the slug
-	fmt.Printf("in postHandler found slug %s\n", slug)
+
 	if slug == "" {
+		app.logger.Info("path not found", "info", slug, "handler", "post")
 		http.Redirect(w, r, "/", http.StatusNoContent) // if slug contains no content redirect to home
 		return
 	}
