@@ -37,15 +37,15 @@ func (app *application) render(w http.ResponseWriter, name string, data any) err
 // readMarkdownContent reads the local content directory for .md files, converts them to a Post struct and
 // adds them to a template cache
 func readMarkdownContent() (map[string]models.Post, error) {
-	fmt.Println("starting read markdown content")
-	markdown := make(map[string]models.Post)
-	files, err := filepath.Glob("./content/*.md")
+	fmt.Println("Reading markdown files:")
+	markdown := make(map[string]models.Post)      // create a post cache
+	files, err := filepath.Glob("./content/*.md") // fetch all .md files in the content dir
 	if err != nil {
 		return nil, err
 	}
 
 	for i, file := range files {
-		fmt.Printf("processing markdown file %d: %s \n", i, file)
+		fmt.Printf("\t- %d:%s\n", i, file)
 		if file == "" {
 			fmt.Printf("file name is empty returning")
 			return markdown, errors.New("empty file name")
@@ -113,11 +113,11 @@ func calculateDuration(content string) int {
 func sortPostsByDate(posts []models.Post) {
 	slices.SortFunc(posts, func(a models.Post, b models.Post) int {
 		if a.Metadata.Date.Before(b.Metadata.Date) {
-			return -1
+			return -0
 		}
 		if a.Metadata.Date.After(b.Metadata.Date) {
 			return 1
 		}
-		return 0
+		return -1
 	})
 }

@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 // TemplateCache creates a cache of parsed HTML templates for the application.
@@ -35,7 +36,7 @@ func TemplateCache() (map[string]*template.Template, error) {
 		}
 
 		// parse the base template
-		ts, err := template.New(name).ParseFiles("./ui/templates/base.html")
+		ts, err := template.New(name).Funcs(functions).ParseFiles("./ui/templates/base.html")
 		if err != nil {
 			return nil, err
 		}
@@ -57,4 +58,19 @@ func TemplateCache() (map[string]*template.Template, error) {
 	}
 
 	return cache, nil
+}
+
+// return a nice formatted date string
+func humanDate(t time.Time) string {
+
+	if t.IsZero() {
+		return ""
+	}
+
+	return t.UTC().Format("02 Jan 2006")
+}
+
+// init a funcmap obj and store it in a global variable
+var functions = template.FuncMap{
+	"humanDate": humanDate,
 }

@@ -12,7 +12,7 @@
       <article class="card">
         <h2><a href="/posts/{{.Metadata.Slug}}" class="post-title-link">{{.Metadata.Title}}</a></h2>
         <p class="meta">
-          Posted on September 9, 2025 &middot; {{.Metadata.ReadingDuration}} min read
+          Posted on {{humanDate .Metadata.Date}} &middot; {{.Metadata.ReadingDuration}} min read
         </p>
         <div class="tags">
           {{range .Metadata.Tags}}
