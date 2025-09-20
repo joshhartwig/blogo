@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/xml"
 	"fmt"
 	"net/http"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/joshhartwig/blogo/internal/models"
 )
 
@@ -75,4 +78,38 @@ func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) projectsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("not implemented"))
+}
+
+func (app *application) rssHandler(w http.ResponseWriter, r *http.Request) {
+	items := []models.Item{}
+	feedData := models.RSS{
+		Title:       "Josh's Blog",
+		Link:        "https://localhost:3999",
+		Description: "description",
+		Language:    "English",
+		PubDate:     time.Now(),
+		Category:    "blog",
+		Item:        items,
+	}
+
+	for _, post := range app.markdownCache {
+		item := models.Item{
+			Title:       post.Metadata.Title,
+			Link:        post.Metadata.Slug,
+			Description: post.Metadata.Summary,
+			Category:    "blog",
+			GUID:        uuid.New().String(),
+		}
+
+		feedData.Item = append(feedData.Item, item)
+	}
+
+	data, err := xml.Marshal(feedData)
+	if err != nil {
+		app.logger.Error(err.Error(), "error marshaling feed data to xml", "rssHanlder")
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/xml")
+	w.Write(data)
 }

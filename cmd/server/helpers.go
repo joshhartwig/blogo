@@ -106,7 +106,7 @@ func calculateDuration(content string) int {
 	}
 
 	duration := float64(len(words)) / float64(wordsPerMinute)
-	return int(math.Round(duration))
+	return int(math.Round(duration) + 1)
 }
 
 // Sort posts by date
@@ -120,4 +120,17 @@ func sortPostsByDate(posts []models.Post) {
 		}
 		return -1
 	})
+}
+
+// searchPosts will search post content for the terms and return the results
+func (app *application) searchPosts(term string) []models.Post {
+	posts := []models.Post{}
+
+	for _, post := range app.markdownCache {
+		if strings.Contains(string(post.Content), term) {
+			posts = append(posts, post)
+		}
+	}
+
+	return posts
 }

@@ -12,6 +12,7 @@ func (app *application) routes() http.Handler {
 	router.Handle("/", app.middleware(http.HandlerFunc(app.homeHandler)))
 
 	router.Handle("/ping", app.middleware(http.HandlerFunc(app.ping)))
+	router.Handle("/rss", app.middleware(http.HandlerFunc(app.rssHandler)))
 	router.Handle("/notfound", app.middleware(http.HandlerFunc(app.notFoundHandler)))
 	router.Handle("/about", app.middleware(http.HandlerFunc(app.aboutHandler)))
 	router.Handle("/projects", app.middleware(http.HandlerFunc(app.projectsHandler)))

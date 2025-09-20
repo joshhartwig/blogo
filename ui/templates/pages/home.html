@@ -3,13 +3,17 @@
 {{define "main"}}
 <section class="blog-header">
   <h1>Welcome to Josh's Blog</h1>
-  <p class="subtitle">25 years in IT. Thoughts, tutorials, opions. Don't take me srs!</p>
+  <p class="subtitle">
+    An unserious blog from someone that has been in IT for 25 years. My views are mine and are not representive of my employer. This blog 
+    covers topic from Homelabs, Docker, Development, Go and anything else I like to get into. Maybe even the occasional electronic project. 
+    I hope you enjoy the content!
+  </p>
 </section>
 
 <section class="blog-list">
   {{if .Posts}}
     {{range .Posts}}
-      <article class="card">
+      <article>
         <h2><a href="/posts/{{.Metadata.Slug}}" class="post-title-link">{{.Metadata.Title}}</a></h2>
         <p class="meta">
           Posted on {{humanDate .Metadata.Date}} &middot; {{.Metadata.ReadingDuration}} min read

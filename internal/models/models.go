@@ -23,3 +23,22 @@ type PostMetadata struct {
 	Slug            string
 	ReadingDuration int
 }
+
+type RSS struct {
+	Title       string    `xml:"title"`
+	Link        string    `xml:"link"`
+	Description string    `xml:"description"`
+	Language    string    `xml:"language"`
+	PubDate     time.Time `xml:"pubdate"`
+	Category    string    `xml:"category"`
+	Item        []Item    `xml:"items"`
+}
+
+type Item struct {
+	Title       string    `xml:"title"`
+	Link        string    `xml:"link"`
+	Description string    `xml:"description"`
+	Category    string    `xml:"category"`
+	GUID        string    `xml:"guid"`
+	PubDate     time.Time `xml:"pubDate"`
+}
