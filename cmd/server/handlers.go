@@ -113,3 +113,22 @@ func (app *application) rssHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/xml")
 	w.Write(data)
 }
+
+func (app *application) searchHandler(w http.ResponseWriter, r *http.Request) {
+	term := r.URL.Query().Get("q")
+	results := app.searchPosts(term)
+
+	data := struct {
+		Posts []models.Post
+		Term  string
+	}{
+		Posts: results,
+		Term:  term,
+	}
+
+	err := app.render(w, "search", data)
+	if err != nil {
+		app.logger.Error(err.Error(), "error fetching posts", "error")
+		return
+	}
+}
