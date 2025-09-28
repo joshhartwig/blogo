@@ -11,7 +11,7 @@ import (
 )
 
 // ping is used for testing endpoints to ensure handlers are working
-func (app *application) ping(w http.ResponseWriter, r *http.Request) {
+func ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("pong"))
 }
 

@@ -40,7 +40,7 @@ func main() {
 	}
 
 	// fetch posts from content folder
-	posts, err := readMarkdownContent()
+	posts, err := readMarkdownContent("./content/")
 	if err != nil {
 		fmt.Println("Error reading markdown content: ", err)
 	}
