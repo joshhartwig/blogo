@@ -46,10 +46,16 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 // adds them to a template cache
 func readMarkdownContent(path string) (map[string]models.Post, error) {
 	fmt.Println("Reading markdown files:")
-	markdown := make(map[string]models.Post)   // create a post cache
-	files, err := filepath.Glob(path + "*.md") // fetch all .md files in the content dir
+	markdown := make(map[string]models.Post) // create a post cache
+
+	files, err := filepath.Glob(filepath.Join(path, "*.md")) // fetch all .md files in the content dir
 	if err != nil {
 		return nil, err
+	}
+
+	// exit as error if we find no files
+	if len(files) == 0 {
+		return nil, fmt.Errorf("no matching files")
 	}
 
 	for i, file := range files {
