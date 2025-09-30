@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"html/template"
+	"log"
 
 	"log/slog"
 	"net/http"
@@ -20,11 +21,14 @@ type config struct {
 type application struct {
 	templateCache map[string]*template.Template
 	markdownCache map[string]models.Post
+	contentPath   string
 	logger        *slog.Logger
 }
 
 func main() {
-	port := flag.Int("port", 3999, "server port")
+	port := flag.Int("port", 3999, "port to listen on")
+	contentPath := flag.String("content", "./content/", "path on file sytem for content")
+
 	flag.Parse()
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{AddSource: false}))
@@ -49,6 +53,7 @@ func main() {
 		logger:        logger,
 		templateCache: templateCache,
 		markdownCache: posts,
+		contentPath:   *contentPath,
 	}
 
 	srv := http.Server{
@@ -61,10 +66,5 @@ func main() {
 	}
 
 	fmt.Printf("Starting server on port%s\n", cfg.port)
-	err = srv.ListenAndServe()
-	if err != nil {
-		app.logger.Error("Fatal Error:", err.Error(), time.Now())
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	log.Fatal(srv.ListenAndServe())
 }

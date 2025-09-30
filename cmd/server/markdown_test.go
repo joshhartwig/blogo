@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-// TODO: readContent works in main but not in test
+// Tests readMarkdownContent pulls any markdown files
 func TestReadContent(t *testing.T) {
 	markdownCache, err := readMarkdownContent("../../content/")
 	if err != nil {
