@@ -44,7 +44,7 @@ func main() {
 	}
 
 	// fetch posts from content folder
-	posts, err := readMarkdownContent("./content/")
+	posts, err := readMarkdownContent(os.DirFS(*contentPath))
 	if err != nil {
 		fmt.Println("Error reading markdown content: ", err)
 	}
