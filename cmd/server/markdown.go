@@ -2,10 +2,9 @@ package main
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"html/template"
-	"os"
+	"io/fs"
 	"path/filepath"
 	"strings"
 
@@ -44,40 +43,31 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 
 // readMarkdownContent reads the local content directory for .md files, converts them to a Post struct and
 // adds them to a template cache
-func readMarkdownContent(path string) (map[string]models.Post, error) {
-	fmt.Println("Reading markdown files:")
-	markdown := make(map[string]models.Post) // create a post cache
+func readMarkdownContent(fileSystem fs.FS) (map[string]models.Post, error) {
+	posts := make(map[string]models.Post)
 
-	files, err := filepath.Glob(filepath.Join(path, "*.md")) // fetch all .md files in the content dir
+	files, err := fs.Glob(fileSystem, "*.md") // fetch all .md files in the content dir
 	if err != nil {
 		return nil, err
 	}
 
-	// exit as error if we find no files
 	if len(files) == 0 {
 		return nil, fmt.Errorf("no matching files")
 	}
 
-	for i, file := range files {
-		fmt.Printf("\t- %d:%s\n", i, file)
-		if file == "" {
-			fmt.Printf("file name is empty returning")
-			return markdown, errors.New("empty file name")
-		}
-
-		filename := filepath.Base(file)             // get just the base file example.html
-		name := strings.TrimSuffix(filename, ".md") // get the title name for the map
-		data, err := os.ReadFile(file)              // read the file into a []byte
+	for _, path := range files {
+		data, err := fs.ReadFile(fileSystem, path)
 		if err != nil {
 			return nil, err
 		}
 
-		post, err := convertMarkdownToHtml(name, data) // convert the markdown file into a post struct
+		slug := strings.TrimSuffix(filepath.Base(path), ".md") // get the title name for the map
+		post, err := convertMarkdownToHtml(slug, data)         // convert the markdown file into a post struct
 		if err != nil {
 			return nil, err
 		}
-		markdown[name] = post // add markdown to cache
+		posts[slug] = post // add markdown to cache
 	}
 
-	return markdown, nil
+	return posts, nil
 }
