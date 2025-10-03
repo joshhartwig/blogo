@@ -14,6 +14,8 @@ import (
 	"go.abhg.dev/goldmark/frontmatter"
 )
 
+// convertMarkdownToHtml takes the markdown data in bytes and converts it to html
+// it then creates a new Post{} and adds both the HTML and PostMetadata and returns both
 func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 	post := models.Post{}
 	meta := models.PostMetadata{}

@@ -4,6 +4,8 @@ import (
 	"strings"
 	"testing"
 	"testing/fstest"
+
+	"github.com/joshhartwig/blogo/internal/models"
 )
 
 const testFrontMatterOne = `
@@ -30,8 +32,31 @@ tags:
 # Test2
 `
 
+func TestConvertMarkdownToHTML(t *testing.T) {
+	want := models.Post{
+		Content: `<h1>Test1</h1>`,
+		Metadata: models.PostMetadata{
+			Title: "test1",
+		},
+	}
+
+	got, err := convertMarkdownToHtml("test1", []byte(testFrontMatterOne))
+	if err != nil {
+		t.Errorf("got error: %v when converting markdown to html", err)
+	}
+
+	// note we need to trim the string as goldmark will add a trailing line feed
+	if strings.Compare(strings.TrimSpace(string(got.Content)), strings.TrimSpace(string(want.Content))) != 0 {
+		t.Errorf("got %s want %s", got.Content, want.Content)
+	}
+
+	if got.Metadata.Title != want.Metadata.Title {
+		t.Errorf("got title:%s\n, want title:%s\n", got.Metadata.Title, want.Metadata.Title)
+	}
+}
+
 // Tests readMarkdownContent pulls any markdown files
-func TestReadContent(t *testing.T) {
+func TestReadMarkdownContent(t *testing.T) {
 	testFs := fstest.MapFS{
 		"file1.md": {Data: []byte(testFrontMatterOne)},
 		"file2.md": {Data: []byte(testFrontMatterTwo)},
