@@ -14,13 +14,13 @@ import (
 func (app *application) render(w http.ResponseWriter, templateName string, data any) error {
 	v, ok := app.templateCache[templateName]
 	if !ok {
-		app.logger.Error("template not found")
-		return errors.New("template not found")
+		app.logger.Error("error: template not found")
+		return errors.New("error: template not found")
 	}
 
 	err := v.ExecuteTemplate(w, "base", data)
 	if err != nil {
-
+		app.logger.Error(err.Error())
 		return err
 	}
 	return nil

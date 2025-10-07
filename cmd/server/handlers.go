@@ -13,6 +13,7 @@ import (
 // ping is used for testing endpoints to ensure handlers are working
 func ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("pong"))
+	w.WriteHeader(http.StatusOK)
 }
 
 // notFoundHandler is intended for posts that are not foud, it will render the notfound template
