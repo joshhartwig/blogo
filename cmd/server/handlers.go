@@ -27,6 +27,7 @@ func (app *application) notFoundHandler(w http.ResponseWriter, r *http.Request) 
 
 // homeHandler is our default handler for the '/' route
 func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
+
 	td := models.TemplateData{}
 	for _, p := range app.markdownCache {
 		td.Posts = append(td.Posts, p)

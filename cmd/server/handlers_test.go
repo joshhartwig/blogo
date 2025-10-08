@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log/slog"
 	"net/http"
@@ -10,19 +11,6 @@ import (
 
 	"github.com/joshhartwig/blogo/internal/models"
 )
-
-const templateString = `
-<!DOCTYPE html>
-<html>
-<head>
-	<title>{{.Title}}</title>
-</head>
-<body>
-	<h1>{{.Title}}</h1>
-	<div>{{.Content}}</div>
-</body>
-</html>
-`
 
 func TestPing_ReturnsString(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/ping", nil)
@@ -44,6 +32,7 @@ func TestPing_ReturnsString(t *testing.T) {
 
 func TestHomeHandler_Returns200(t *testing.T) {
 	app, err := returnMockedApp()
+	fmt.Println(app.templateCache)
 	if err != nil {
 		t.Errorf("error fetching mocked app")
 	}
