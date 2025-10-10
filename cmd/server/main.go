@@ -19,10 +19,11 @@ type config struct {
 }
 
 type application struct {
-	templateCache map[string]*template.Template
-	markdownCache map[string]models.Post
+	templateCache map[string]*template.Template // use to search for template by name
+	markdownCache map[string]models.Post        // used to search for markdown by slug name
 	contentPath   string
 	logger        *slog.Logger
+	posts         []models.Post // used to keep track off all posts
 }
 
 func main() {
@@ -44,16 +45,23 @@ func main() {
 	}
 
 	// fetch posts from content folder
-	posts, err := readMarkdownContent(os.DirFS(*contentPath))
+	markdown, err := readMarkdownContent(os.DirFS(*contentPath))
 	if err != nil {
 		fmt.Println("Error reading markdown content: ", err)
+	}
+
+	// add all posts to the post list
+	posts := []models.Post{}
+	for _, p := range markdown {
+		posts = append(posts, p)
 	}
 
 	app := application{
 		logger:        logger,
 		templateCache: templateCache,
-		markdownCache: posts,
+		markdownCache: markdown,
 		contentPath:   *contentPath,
+		posts:         posts,
 	}
 
 	srv := http.Server{

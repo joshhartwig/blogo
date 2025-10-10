@@ -25,6 +25,32 @@
   --container: 70ch;
 }
 
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid #eee;
+}
+
+.pagination-link {
+    padding: 0.5rem 1rem;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.pagination-link:hover {
+    background: #e9ecef;
+}
+
+.pagination-info {
+    color: #6c757d;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0f172a;          /* slate-900 */

@@ -30,6 +30,22 @@
         <a href="/posts/{{.Metadata.Slug}}" class="read-more">Read more →</a>
       </article>
     {{end}}
+    <!-- Pagination Controls -->
+    {{if gt .Pagination.TotalPages 1}}
+    <nav class="pagination">
+      {{if .Pagination.HasPrev}}
+        <a href="/?page={{.Pagination.PrevPage}}" class="pagination-link prev">← Previous</a>
+      {{end}}
+      
+      <span class="pagination-info">
+        Page {{.Pagination.CurrentPage}} of {{.Pagination.TotalPages}}
+      </span>
+      
+      {{if .Pagination.HasNext}}
+        <a href="/?page={{.Pagination.NextPage}}" class="pagination-link next">Next →</a>
+      {{end}}
+    </nav>
+    {{end}}
   {{else}}
     <h2>No posts found</h2>
   {{end}}

@@ -17,8 +17,8 @@ func (app *application) routes() http.Handler {
 	router.Handle("/search", app.middleware(http.HandlerFunc(app.searchHandler)))
 	router.Handle("/about", app.middleware(http.HandlerFunc(app.aboutHandler)))
 	router.Handle("/projects", app.middleware(http.HandlerFunc(app.projectsHandler)))
-	router.Handle("/posts/", app.middleware(http.HandlerFunc(app.postHandler)))
-	router.Handle("/posts/{slug}", app.middleware(http.HandlerFunc(app.postHandler)))
+	router.Handle("/posts/", app.middleware(http.HandlerFunc(app.listPostHandler)))
+	router.Handle("/posts/{slug}", app.middleware(http.HandlerFunc(app.showPostHandler)))
 
 	return router
 }

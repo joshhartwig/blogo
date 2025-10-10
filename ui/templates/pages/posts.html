@@ -1,12 +1,43 @@
-{{define "title"}}{{.Metadata.Title}}{{end}}
+{{define "title"}}Posts{{end}}
 
 {{define "main"}}
 <section class="blog-list">
-  <article>
-    <h1>{{.Metadata.Title}}</h1>
-    <div class="content">
-      {{.Content}}
-    </div>
-  </article>
+  {{if .Posts}}
+    {{range .Posts}}
+      <article>
+        <h2><a href="/posts/{{.Metadata.Slug}}" class="post-title-link">{{.Metadata.Title}}</a></h2>
+        <p class="meta">
+          Posted on {{humanDate .Metadata.Date}} <span class="dot"></span> {{.Metadata.ReadingDuration}} min read
+        </p>
+        {{if .Metadata.Tags}}
+        <div class="tags">
+          {{range .Metadata.Tags}}
+            <span class="tag">{{.}}</span>
+          {{end}}
+        </div>
+        {{end}}
+        <p>{{.Metadata.Summary}}</p>
+        <a href="/posts/{{.Metadata.Slug}}" class="read-more">Read more →</a>
+      </article>
+    {{end}}
+  {{else}}
+    <h2>No posts found</h2>
+  {{end}}
+  <!-- Pagination Controls -->
+    {{if gt .PaginationData.TotalPages 1}}
+    <nav class="pagination">
+      {{if .PaginationData.HasPrev}}
+        <a href="/?page={{.Pagination.PrevPage}}" class="pagination-link prev">← Previous</a>
+      {{end}}
+      
+      <span class="pagination-info">
+        Page {{.PaginationData.CurrentPage}} of {{.PaginationData.TotalPages}}
+      </span>
+      
+      {{if .PaginationData.HasNext}}
+        <a href="/?page={{.Pagination.NextPage}}" class="pagination-link next">Next →</a>
+      {{end}}
+    </nav>
+    {{end}}
 </section>
 {{end}}

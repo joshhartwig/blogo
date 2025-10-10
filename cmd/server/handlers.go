@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -29,9 +30,7 @@ func (app *application) notFoundHandler(w http.ResponseWriter, r *http.Request) 
 func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
 
 	td := models.TemplateData{}
-	for _, p := range app.markdownCache {
-		td.Posts = append(td.Posts, p)
-	}
+	td.Posts = append(td.Posts, app.posts...)
 
 	sortPostsByDate(td.Posts) // sort posts by date
 
@@ -58,8 +57,62 @@ func (app *application) aboutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// route: /posts lists all posts with paging
+func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) {
+	const postsPerPage = 5
+	page := 1
+	if p := r.URL.Query().Get("page"); p != "" {
+		if n, err := strconv.Atoi(p); err != nil && n > 0 {
+			page = n
+		}
+	}
+
+	totalPosts := len(app.posts)
+	totalPages := (totalPosts + postsPerPage - 1) / postsPerPage
+
+	if page > totalPages {
+		page = totalPages
+	}
+
+	if page < 1 {
+		page = 1
+	}
+
+	start := (page - 1) * postsPerPage
+	end := start + postsPerPage
+	if end > totalPages {
+		end = totalPosts
+	}
+
+	var pagePosts []models.Post
+	if start < totalPosts {
+		pagePosts = app.posts[start:end]
+	}
+
+	pagination := models.PaginationData{
+		CurrentPage:  page,
+		TotalPages:   totalPages,
+		HasNext:      page < totalPages,
+		HasPrev:      page > 1,
+		NextPage:     min(page+1, totalPages),
+		PrevPage:     max(page-1, 1),
+		TotalPosts:   totalPosts,
+		PostsPerPage: postsPerPage,
+	}
+
+	data := models.HomePageData{
+		Posts:          pagePosts,
+		PaginationData: pagination,
+	}
+
+	if err := app.render(w, "posts", data); err != nil {
+		app.logger.Error("error rendering template", err.Error(), "error")
+		http.Error(w, "error rendering template", http.StatusInternalServerError)
+	}
+}
+
 // postHandler renders our post content assuming the slug is found
-func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
+func (app *application) showPostHandler(w http.ResponseWriter, r *http.Request) {
 	slug := r.PathValue("slug") // fetch the slug
 
 	if slug == "" {
@@ -75,7 +128,7 @@ func (app *application) postHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.render(w, "posts", post)
+	app.render(w, "post", post)
 }
 
 func (app *application) projectsHandler(w http.ResponseWriter, r *http.Request) {

@@ -1,0 +1,12 @@
+{{define "title"}}{{.Metadata.Title}}{{end}}
+
+{{define "main"}}
+<section class="blog-list">
+  <article>
+    <h1>{{.Metadata.Title}}</h1>
+    <div class="content">
+      {{.Content}}
+    </div>
+  </article>
+</section>
+{{end}}
