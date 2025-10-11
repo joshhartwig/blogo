@@ -14,11 +14,8 @@ import (
 	"github.com/joshhartwig/blogo/internal/models"
 )
 
-type config struct {
-	port string
-}
-
 type application struct {
+	port          string
 	templateCache map[string]*template.Template // use to search for template by name
 	markdownCache map[string]models.Post        // used to search for markdown by slug name
 	contentPath   string
@@ -33,10 +30,6 @@ func main() {
 	flag.Parse()
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{AddSource: false}))
-
-	cfg := config{
-		port: fmt.Sprintf(":%d", *port),
-	}
 
 	templateCache, err := TemplateCache()
 	if err != nil {
@@ -65,7 +58,7 @@ func main() {
 	}
 
 	srv := http.Server{
-		Addr:         cfg.port,
+		Addr:         fmt.Sprintf(":%d", *port),
 		Handler:      app.routes(),
 		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
 		IdleTimeout:  time.Minute,
@@ -73,6 +66,6 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	fmt.Printf("Starting server on port%s\n", cfg.port)
+	fmt.Printf("Starting server on port%s\n", app.port)
 	log.Fatal(srv.ListenAndServe())
 }

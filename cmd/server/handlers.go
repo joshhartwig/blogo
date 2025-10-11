@@ -29,12 +29,53 @@ func (app *application) notFoundHandler(w http.ResponseWriter, r *http.Request) 
 // homeHandler is our default handler for the '/' route
 func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
 
-	td := models.TemplateData{}
-	td.Posts = append(td.Posts, app.posts...)
+	const postsPerPage = 5
+	page := 1
+	if p := r.URL.Query().Get("page"); p != "" {
+		if n, err := strconv.Atoi(p); err != nil && n > 0 {
+			page = n
+		}
+	}
 
-	sortPostsByDate(td.Posts) // sort posts by date
+	totalPosts := len(app.posts)
+	totalPages := (totalPosts + postsPerPage - 1) / postsPerPage
 
-	if err := app.render(w, "home", td); err != nil {
+	if page > totalPages {
+		page = totalPages
+	}
+
+	if page < 1 {
+		page = 1
+	}
+
+	start := (page - 1) * postsPerPage
+	end := start + postsPerPage
+	if end > totalPages {
+		end = totalPosts
+	}
+
+	var pagePosts []models.Post
+	if start < totalPosts {
+		pagePosts = app.posts[start:end]
+	}
+
+	pagination := models.PaginationData{
+		CurrentPage:  page,
+		TotalPages:   totalPages,
+		HasNext:      page < totalPages,
+		HasPrev:      page > 1,
+		NextPage:     min(page+1, totalPages),
+		PrevPage:     max(page-1, 1),
+		TotalPosts:   totalPosts,
+		PostsPerPage: postsPerPage,
+	}
+	fmt.Println("pagination:", pagination)
+	data := models.HomePageData{
+		Posts:          pagePosts,
+		PaginationData: pagination,
+	}
+
+	if err := app.render(w, "home", data); err != nil {
 		app.logger.Error("error rendering template", err.Error(), "error")
 		http.Error(w, "error rendering template", http.StatusInternalServerError)
 	}
@@ -99,7 +140,7 @@ func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) 
 		TotalPosts:   totalPosts,
 		PostsPerPage: postsPerPage,
 	}
-
+	fmt.Println("pagination:", pagination)
 	data := models.HomePageData{
 		Posts:          pagePosts,
 		PaginationData: pagination,

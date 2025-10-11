@@ -31,18 +31,18 @@
       </article>
     {{end}}
     <!-- Pagination Controls -->
-    {{if gt .Pagination.TotalPages 1}}
+    {{if gt .PaginationData.TotalPages 1}}
     <nav class="pagination">
-      {{if .Pagination.HasPrev}}
-        <a href="/?page={{.Pagination.PrevPage}}" class="pagination-link prev">← Previous</a>
+      {{if .PaginationData.HasPrev}}
+        <a href="/posts/?page={{.PaginationData.PrevPage}}" class="pagination-link prev">← Previous</a>
       {{end}}
       
       <span class="pagination-info">
-        Page {{.Pagination.CurrentPage}} of {{.Pagination.TotalPages}}
+        Page {{.PaginationData.CurrentPage}} of {{.PaginationData.TotalPages}}
       </span>
       
-      {{if .Pagination.HasNext}}
-        <a href="/?page={{.Pagination.NextPage}}" class="pagination-link next">Next →</a>
+      {{if .PaginationData.HasNext}}
+        <a href="/posts/?page={{.PaginationData.NextPage}}" class="pagination-link next">Next →</a>
       {{end}}
     </nav>
     {{end}}

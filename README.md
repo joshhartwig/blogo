@@ -4,9 +4,11 @@ A blog in Go. I spent a bit of time learning Go this year and had not put it to 
 
 ## TODO
 
-- Tag Cloud on Home
-- Better logging
--
+- Fix pagination issues (high)
+- Fix sorting (high)
+- Create a better pagination structure (high)
+- Change /home to only show most recent 5 pages (medium)
+- Add 'headline' to posts that shows short outline of what is in the post for the front page (low)
 
 ## Installation
 

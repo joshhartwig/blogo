@@ -1,6 +1,7 @@
 {{define "title"}}Posts{{end}}
 
 {{define "main"}}
+<!-- Posts -->
 <section class="blog-list">
   {{if .Posts}}
     {{range .Posts}}
@@ -23,11 +24,11 @@
   {{else}}
     <h2>No posts found</h2>
   {{end}}
-  <!-- Pagination Controls -->
-    {{if gt .PaginationData.TotalPages 1}}
+  <!-- Pagination -->
+  {{if gt .PaginationData.TotalPages 1}}
     <nav class="pagination">
       {{if .PaginationData.HasPrev}}
-        <a href="/?page={{.Pagination.PrevPage}}" class="pagination-link prev">← Previous</a>
+        <a href="/posts/?page={{.PaginationData.PrevPage}}" class="pagination-link prev">← Previous</a>
       {{end}}
       
       <span class="pagination-info">
@@ -35,7 +36,7 @@
       </span>
       
       {{if .PaginationData.HasNext}}
-        <a href="/?page={{.Pagination.NextPage}}" class="pagination-link next">Next →</a>
+        <a href="/posts/?page={{.PaginationData.NextPage}}" class="pagination-link next">Next →</a>
       {{end}}
     </nav>
     {{end}}
