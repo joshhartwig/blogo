@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 	"testing/fstest"
@@ -23,7 +24,7 @@ tags:
 const testFrontMatterTwo = `
 ---
 title: "test2"
-date: 2025-09-01
+date: 2025-09-02
 summary: "test summary"
 tags:
   - "#tag1"
@@ -53,6 +54,25 @@ func TestConvertMarkdownToHTML(t *testing.T) {
 	if got.Metadata.Title != want.Metadata.Title {
 		t.Errorf("got title:%s\n, want title:%s\n", got.Metadata.Title, want.Metadata.Title)
 	}
+}
+
+func TestReadMarkdownReturnPostsInOrder(t *testing.T) {
+	testFs := fstest.MapFS{
+		"file1.md": {Data: []byte(testFrontMatterOne)},
+		"file2.md": {Data: []byte(testFrontMatterTwo)},
+		"file3.md": {Data: []byte(testFrontMatterTwo)},
+	}
+
+	sortedPosts, err := readMarkdownReturnPostsInOrder(testFs)
+	if err != nil {
+		t.Errorf("should not have received error %v", err)
+	}
+
+	if len(sortedPosts) < len(testFs) {
+		t.Error("should be more then 2 posts")
+	}
+
+	fmt.Println(sortedPosts[0].Metadata.Date)
 }
 
 // Tests readMarkdownContent pulls any markdown files

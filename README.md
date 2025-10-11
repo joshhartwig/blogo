@@ -18,8 +18,6 @@ git clone https://github.com/joshhartwig/blogo.git
 cd blogo
 ```
 
-# Install dependencies
-
 ## Features
 
 - No database needed, reads markdown files direct from content directory

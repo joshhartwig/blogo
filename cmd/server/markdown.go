@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"io/fs"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/joshhartwig/blogo/internal/models"
@@ -41,6 +42,39 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 	post.Metadata.Slug = slug                                       // add the slug
 
 	return post, nil
+}
+
+func readMarkdownReturnPostsInOrder(fileSystem fs.FS) ([]models.Post, error) {
+	var posts []models.Post
+
+	files, err := fs.Glob(fileSystem, "*.md")
+	if err != nil {
+		return nil, err
+	}
+
+	if len(files) == 0 {
+		return nil, fmt.Errorf("no matching files")
+	}
+
+	for _, path := range files {
+		data, err := fs.ReadFile(fileSystem, path)
+		if err != nil {
+			return nil, err
+		}
+
+		slug := strings.TrimSuffix(filepath.Base(path), ".md") // get the title name for the map
+		post, err := convertMarkdownToHtml(slug, data)         // convert the markdown file into a post struct
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, post)
+	}
+
+	slices.SortFunc(posts, func(a, b models.Post) int {
+		return a.Metadata.Date.Compare(b.Metadata.Date)
+	})
+
+	return posts, nil
 }
 
 // readMarkdownContent reads the local content directory for .md files, converts them to a Post struct and

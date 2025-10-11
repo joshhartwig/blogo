@@ -4,7 +4,6 @@ import (
 	"errors"
 	"math"
 	"net/http"
-	"slices"
 	"strings"
 
 	"github.com/joshhartwig/blogo/internal/models"
@@ -38,19 +37,6 @@ func calculateDuration(content string) int {
 
 	duration := float64(len(words)) / float64(wordsPerMinute)
 	return int(math.Round(duration) + 1)
-}
-
-// Sort posts by date
-func sortPostsByDate(posts []models.Post) {
-	slices.SortFunc(posts, func(a models.Post, b models.Post) int {
-		if a.Metadata.Date.Before(b.Metadata.Date) {
-			return -0
-		}
-		if a.Metadata.Date.After(b.Metadata.Date) {
-			return 1
-		}
-		return -1
-	})
 }
 
 // searchPosts will search post content for the terms and return the results

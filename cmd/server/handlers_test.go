@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log/slog"
 	"net/http"
@@ -32,7 +31,6 @@ func TestPing_ReturnsString(t *testing.T) {
 
 func TestHomeHandler_Returns200(t *testing.T) {
 	app, err := returnMockedApp()
-	fmt.Println(app.templateCache)
 	if err != nil {
 		t.Errorf("error fetching mocked app")
 	}
