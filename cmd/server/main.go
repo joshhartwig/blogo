@@ -31,9 +31,14 @@ func main() {
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{AddSource: false}))
 
-	templateCache, err := TemplateCache()
+	templateCache, err := TemplateCache(os.DirFS(
+		"./ui/templates/"),
+		"pages/*.html",
+		"partials/*.html",
+		"base.html",
+	)
 	if err != nil {
-		fmt.Println("Unable to create template cache, exiting to OS")
+		fmt.Println("Unable to create template cache, exiting to OS", err)
 		os.Exit(1)
 	}
 

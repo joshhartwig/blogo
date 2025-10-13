@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"html/template"
+	"io/fs"
 	"path/filepath"
 	"strings"
 	"time"
@@ -16,11 +17,12 @@ import (
 //
 // The resulting *template.Template for each page is stored in a map, keyed by the page's filename.
 // Returns the cache map and any error encountered during parsing.
-func TemplateCache() (map[string]*template.Template, error) {
+func TemplateCache(fileSys fs.FS, pagesGlobPath, partialsGlobPath, basePath string) (map[string]*template.Template, error) {
+	//"./ui/templates/partials/*.html"
 	cache := map[string]*template.Template{}
 
 	// get all the pages from the pages path
-	pages, err := filepath.Glob("./ui/templates/pages/*.html")
+	pages, err := fs.Glob(fileSys, pagesGlobPath)
 	if err != nil {
 		return nil, err
 	}
@@ -36,19 +38,19 @@ func TemplateCache() (map[string]*template.Template, error) {
 		}
 
 		// parse the base template
-		ts, err := template.New(name).Funcs(functions).ParseFiles("./ui/templates/base.html")
+		ts, err := template.New(name).Funcs(functions).ParseFS(fileSys, basePath)
 		if err != nil {
 			return nil, err
 		}
 
 		// parse the partials
-		ts, err = ts.ParseGlob("./ui/templates/partials/*.html")
+		ts, err = ts.ParseFS(fileSys, partialsGlobPath)
 		if err != nil {
 			return nil, err
 		}
 
-		// parse the page
-		ts, err = ts.ParseFiles(page)
+		// parse the page using the provided filesystem so relative paths resolve
+		ts, err = ts.ParseFS(fileSys, page)
 		if err != nil {
 			return nil, err
 		}
