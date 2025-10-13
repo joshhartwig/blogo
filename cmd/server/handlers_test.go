@@ -52,7 +52,7 @@ func returnMockedApp() (application, error) {
 		"templates/pages/home.html":      {Data: []byte(`{{define "main"}}<h1>Home Page</h1>{{end}}`)},
 		"templates/pages/about.html":     {Data: []byte(`<h1>About Page</h1>`)},
 		"templates/base.html":            {Data: []byte(`{{define "base"}}<!DOCTYPE html><html><body>{{template "nav" .}}<main>{{template "main" .}}</main></body></html>{{end}}`)},
-		"templates/partials/nav.html":    {Data: []byte(`<nav>Navigation</nav>`)},
+		"templates/partials/nav.html":    {Data: []byte(`{{define "nav"}}<nav>Nav</nav>{{end}}`)},
 		"templates/partials/footer.html": {Data: []byte(`<footer>Footer</footer>`)},
 	}
 

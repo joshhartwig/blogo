@@ -38,7 +38,9 @@ func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	totalPosts := len(app.posts)
+	fmt.Println("totalposts", len(app.posts))
 	totalPages := (totalPosts + postsPerPage - 1) / postsPerPage
+	fmt.Println("totalpages", totalPages)
 
 	if page > totalPages {
 		page = totalPages
@@ -48,13 +50,14 @@ func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
 		page = 1
 	}
 
-	start := (page - 1) * postsPerPage
+	start := (page - 1)
 	end := start + postsPerPage
 	if end > totalPages {
-		end = totalPosts
+		end = totalPages
 	}
 
 	var pagePosts []models.Post
+	fmt.Println("start/end", start, end)
 	if start < totalPosts {
 		pagePosts = app.posts[start:end]
 	}
