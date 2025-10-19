@@ -21,6 +21,7 @@ type application struct {
 	contentPath   string
 	logger        *slog.Logger
 	posts         []models.Post // used to keep track off all posts
+	postsPerPage  int
 }
 
 func main() {

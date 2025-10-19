@@ -10,17 +10,6 @@ type TemplateData struct {
 	Posts []Post
 }
 
-type PaginationData struct {
-	CurrentPage  int
-	TotalPages   int
-	HasNext      bool
-	HasPrev      bool
-	NextPage     int
-	PrevPage     int
-	TotalPosts   int
-	PostsPerPage int
-}
-
 type HomePageData struct {
 	Title          string
 	Posts          []Post
@@ -30,6 +19,17 @@ type HomePageData struct {
 type Post struct {
 	Metadata PostMetadata
 	Content  template.HTML
+}
+
+type PaginationData struct {
+	CurrentPage  int
+	PageCount    int
+	HasNext      bool
+	HasPrev      bool
+	NextPage     int
+	PrevPage     int
+	PostCount    int
+	PostsPerPage int
 }
 
 type PostMetadata struct {
