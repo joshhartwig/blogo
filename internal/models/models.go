@@ -5,17 +5,21 @@ import (
 	"time"
 )
 
+// TemplateData holds data to be passed to HTML templates, including the page title and a list of blog posts.
 type TemplateData struct {
 	Title string
 	Posts []Post
 }
 
+// HomePageData represents the data structure used to render the home page,
+// including the page title, a list of blog posts, and pagination information.
 type HomePageData struct {
 	Title          string
 	Posts          []Post
 	PaginationData PaginationData
 }
 
+// Post represents a blog post, containing its metadata and HTML content.
 type Post struct {
 	Metadata PostMetadata
 	Content  template.HTML
@@ -48,6 +52,20 @@ type Pagination struct {
 func NewPagination(currentPage, postsPerPage, postCount int) Pagination {
 	if postsPerPage <= 0 {
 		postsPerPage = 5
+	}
+
+	if currentPage > (postCount/postsPerPage) || currentPage < 0 {
+		return Pagination{
+			CurrentPage: 1,
+			NextPage:    1,
+			PrevPage:    1,
+			PostCount:   postCount,
+			PageCount:   getPageCount(postCount, postsPerPage),
+			HasNext:     currentPage < getPageCount(postCount, postsPerPage),
+			HasPrev:     currentPage > 1,
+			PostsStart:  1,
+			PostsEnd:    1 + (postsPerPage - 1),
+		}
 	}
 
 	pageCount := (postCount + postsPerPage - 1) / postsPerPage
@@ -87,6 +105,10 @@ func calculatePostStartAndEnd(currentPage, postsPerPage int, postCount int) (sta
 	}
 
 	return
+}
+
+func getPageCount(postCount, postsPerPage int) int {
+	return (postCount + postsPerPage - 1) / postsPerPage
 }
 
 // min returns the smaller of two integers a and b.
