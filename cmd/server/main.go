@@ -27,6 +27,7 @@ type application struct {
 func main() {
 	port := flag.Int("port", 3999, "port to listen on")
 	contentPath := flag.String("content", "./content/", "path on file sytem for content")
+	postsPerPage := flag.Int("posts per page", 5, "sets the default count of posts per page")
 
 	flag.Parse()
 
@@ -61,6 +62,7 @@ func main() {
 		markdownCache: markdown,
 		contentPath:   *contentPath,
 		posts:         posts,
+		postsPerPage:  *postsPerPage,
 	}
 
 	srv := http.Server{
