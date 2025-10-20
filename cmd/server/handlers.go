@@ -28,54 +28,14 @@ func (app *application) notFoundHandler(w http.ResponseWriter, r *http.Request) 
 
 // homeHandler is our default handler for the '/' route
 func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
-
-	const postsPerPage = 5
-	page := 1
-	if p := r.URL.Query().Get("page"); p != "" {
-		if n, err := strconv.Atoi(p); err != nil && n > 0 {
-			page = n
-		}
-	}
-
-	totalPosts := len(app.posts)
-	fmt.Println("totalposts", len(app.posts))
-	totalPages := (totalPosts + postsPerPage - 1) / postsPerPage
-	fmt.Println("totalpages", totalPages)
-
-	if page > totalPages {
-		page = totalPages
-	}
-
-	if page < 1 {
-		page = 1
-	}
-
-	start := (page - 1)
-	end := start + postsPerPage
-	if end > totalPages {
-		end = totalPages
-	}
-
 	var pagePosts []models.Post
-	fmt.Println("start/end", start, end)
-	if start < totalPosts {
-		pagePosts = app.posts[start:end]
+
+	for _, p := range app.markdownCache {
+		pagePosts = append(pagePosts, p)
 	}
 
-	pagination := models.PaginationData{
-		CurrentPage:  page,
-		TotalPages:   totalPages,
-		HasNext:      page < totalPages,
-		HasPrev:      page > 1,
-		NextPage:     min(page+1, totalPages),
-		PrevPage:     max(page-1, 1),
-		TotalPosts:   totalPosts,
-		PostsPerPage: postsPerPage,
-	}
-	fmt.Println("pagination:", pagination)
 	data := models.HomePageData{
-		Posts:          pagePosts,
-		PaginationData: pagination,
+		Posts: pagePosts[0:1],
 	}
 
 	if err := app.render(w, "home", data); err != nil {
@@ -103,7 +63,6 @@ func (app *application) aboutHandler(w http.ResponseWriter, r *http.Request) {
 
 // route: /posts lists all posts with paging
 func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) {
-	const postsPerPage = 5
 	page := 1
 	if p := r.URL.Query().Get("page"); p != "" {
 		if n, err := strconv.Atoi(p); err != nil && n > 0 {
@@ -112,7 +71,7 @@ func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	totalPosts := len(app.posts)
-	totalPages := (totalPosts + postsPerPage - 1) / postsPerPage
+	totalPages := (totalPosts + app.postsPerPage - 1) / app.postsPerPage
 
 	if page > totalPages {
 		page = totalPages
@@ -122,8 +81,8 @@ func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) 
 		page = 1
 	}
 
-	start := (page - 1) * postsPerPage
-	end := start + postsPerPage
+	start := (page - 1) * app.postsPerPage
+	end := start + app.postsPerPage
 	if end > totalPages {
 		end = totalPosts
 	}
@@ -135,13 +94,13 @@ func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) 
 
 	pagination := models.PaginationData{
 		CurrentPage:  page,
-		TotalPages:   totalPages,
+		PageCount:    totalPages,
 		HasNext:      page < totalPages,
 		HasPrev:      page > 1,
 		NextPage:     min(page+1, totalPages),
 		PrevPage:     max(page-1, 1),
-		TotalPosts:   totalPosts,
-		PostsPerPage: postsPerPage,
+		PostCount:    totalPosts,
+		PostsPerPage: app.postsPerPage,
 	}
 	fmt.Println("pagination:", pagination)
 	data := models.HomePageData{
