@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/joshhartwig/blogo/internal/models"
+	"github.com/joshhartwig/blogo/internal/postrepo"
 )
 
 type application struct {
@@ -22,6 +23,7 @@ type application struct {
 	logger        *slog.Logger
 	posts         []models.Post // used to keep track off all posts
 	postsPerPage  int
+	postRepo      postrepo.PostRepository
 }
 
 func main() {
@@ -63,6 +65,7 @@ func main() {
 		contentPath:   *contentPath,
 		posts:         posts,
 		postsPerPage:  *postsPerPage,
+		postRepo:      postrepo.NewPostRepository(posts),
 	}
 
 	srv := http.Server{

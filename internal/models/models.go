@@ -14,9 +14,9 @@ type TemplateData struct {
 // HomePageData represents the data structure used to render the home page,
 // including the page title, a list of blog posts, and pagination information.
 type HomePageData struct {
-	Title          string
-	Posts          []Post
-	PaginationData PaginationData
+	Title      string
+	Posts      []Post
+	Pagination Pagination
 }
 
 // Post represents a blog post, containing its metadata and HTML content.
@@ -54,7 +54,7 @@ func NewPagination(currentPage, postsPerPage, postCount int) Pagination {
 		postsPerPage = 5
 	}
 
-	if currentPage > (postCount/postsPerPage) || currentPage < 0 {
+	if currentPage < 1 || currentPage > (postCount/postsPerPage+1) {
 		return Pagination{
 			CurrentPage: 1,
 			NextPage:    1,
@@ -125,17 +125,6 @@ func max(a, b int) int {
 		return a
 	}
 	return b
-}
-
-type PaginationData struct {
-	CurrentPage  int
-	PageCount    int
-	HasNext      bool
-	HasPrev      bool
-	NextPage     int
-	PrevPage     int
-	PostCount    int
-	PostsPerPage int
 }
 
 // PostMetadata represents the metadata associated with a blog post, including its title,

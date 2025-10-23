@@ -28,14 +28,17 @@ func (app *application) notFoundHandler(w http.ResponseWriter, r *http.Request) 
 
 // homeHandler is our default handler for the '/' route
 func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
-	var pagePosts []models.Post
+	var pagePosts = []models.Post{}
 
-	for _, p := range app.markdownCache {
-		pagePosts = append(pagePosts, p)
+	// if the post count is < 5 do the max else do 5
+	if len(app.postRepo.Posts) < 5 {
+		pagePosts = app.postRepo.GetTopPosts(len(app.postRepo.Posts) - 1)
+	} else {
+		pagePosts = app.postRepo.GetTopPosts(5)
 	}
 
 	data := models.HomePageData{
-		Posts: pagePosts[0:1],
+		Posts: pagePosts,
 	}
 
 	if err := app.render(w, "home", data); err != nil {
@@ -65,47 +68,19 @@ func (app *application) aboutHandler(w http.ResponseWriter, r *http.Request) {
 func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) {
 	page := 1
 	if p := r.URL.Query().Get("page"); p != "" {
-		if n, err := strconv.Atoi(p); err != nil && n > 0 {
+		if n, err := strconv.Atoi(p); err == nil && n > 0 {
 			page = n
 		}
 	}
-
-	totalPosts := len(app.posts)
-	totalPages := (totalPosts + app.postsPerPage - 1) / app.postsPerPage
-
-	if page > totalPages {
-		page = totalPages
-	}
-
-	if page < 1 {
-		page = 1
-	}
-
-	start := (page - 1) * app.postsPerPage
-	end := start + app.postsPerPage
-	if end > totalPages {
-		end = totalPosts
-	}
-
-	var pagePosts []models.Post
-	if start < totalPosts {
-		pagePosts = app.posts[start:end]
-	}
-
-	pagination := models.PaginationData{
-		CurrentPage:  page,
-		PageCount:    totalPages,
-		HasNext:      page < totalPages,
-		HasPrev:      page > 1,
-		NextPage:     min(page+1, totalPages),
-		PrevPage:     max(page-1, 1),
-		PostCount:    totalPosts,
-		PostsPerPage: app.postsPerPage,
-	}
+	fmt.Println("page:", page)
+	fmt.Printf("param:%d postsPerPage:%d posts:%d", page, app.postsPerPage, len(app.postRepo.Posts))
+	pagination := models.NewPagination(page, app.postsPerPage, len(app.postRepo.Posts))
+	start := pagination.PostsStart
+	end := pagination.PostsEnd
 	fmt.Println("pagination:", pagination)
 	data := models.HomePageData{
-		Posts:          pagePosts,
-		PaginationData: pagination,
+		Posts:      app.postRepo.GetPostsBetweenRange(start, end),
+		Pagination: pagination,
 	}
 
 	if err := app.render(w, "posts", data); err != nil {
