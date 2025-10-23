@@ -22,6 +22,14 @@ func TestCalculatePostStartAndEnd(t *testing.T) {
 			currentPage:  2,
 		},
 		{
+			name:         "6 p, 5 ppp, 2 pages, 2 cp",
+			wantStart:    5,
+			wantEnd:      6,
+			postCount:    6,
+			postsPerPage: 5,
+			currentPage:  2,
+		},
+		{
 			name:         "20 p, 3 ppp, 6 pages, 2 cp",
 			wantStart:    4,
 			wantEnd:      6,
