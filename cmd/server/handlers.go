@@ -85,7 +85,7 @@ func (app *application) showPostHandler(w http.ResponseWriter, r *http.Request) 
 
 	if slug == "" || len(slug) > 200 {
 		app.logger.Warn("path not found", "info", slug, "handler", "post")
-		http.Redirect(w, r, "/notfoud ", http.StatusSeeOther)
+		http.Redirect(w, r, "/notfound ", http.StatusSeeOther)
 		return
 	}
 
@@ -108,15 +108,26 @@ func (app *application) projectsHandler(w http.ResponseWriter, r *http.Request) 
 	w.Write([]byte("not implemented"))
 }
 
-// isValidSlug reports whether slug is a non-empty, ASCII-only slug suitable for URLs:
-// it returns true only if slug consists solely of lowercase letters (a–z), digits (0–9)
-// and hyphens (-) and contains at least one character. Uppercase letters, spaces,
-// underscores and other punctuation are not permitted.
+// isValidSlug reports whether slug is a non-empty, ASCII-only slug suitable for URLs
 func isValidSlug(slug string) bool {
 	matched, _ := regexp.MatchString(`^[a-z0-9-]+$`, slug)
 	return matched
 }
 
+// rssHandler generates and writes an RSS XML feed built from the application's markdown cache.
+// It iterates over app.markdownCache, converts each post's metadata into a models.Item
+// (Title from post.Metadata.Title, Link from post.Metadata.Slug, Description from post.Metadata.Summary,
+// Category set to "blog", GUID generated via uuid.New()), and collects those items into a models.RSS
+// feed with feed-level metadata (Title "Josh's Blog", Link "https://localhost:3999", Description,
+// Language "English", PubDate set to time.Now(), Category "blog").
+// The final feed is marshaled to XML and written to the response with Content-Type "application/xml".
+// If XML marshaling fails the error is logged using app.logger.Error and the handler returns
+// without writing a response body or setting an explicit HTTP status code.
+//
+// Notes:
+//   - The request parameter r is not used by this handler beyond satisfying the http.Handler signature.
+//   - The handler does not write an explicit HTTP status code on success, does not include an XML
+//     declaration header, and assumes app.markdownCache can be safely read without additional locking.
 func (app *application) rssHandler(w http.ResponseWriter, r *http.Request) {
 	items := []models.Item{}
 	feedData := models.RSS{
@@ -151,9 +162,27 @@ func (app *application) rssHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
+// searchHandler handles HTTP requests that perform a search for posts.
+// It extracts the "q" query parameter from the request URL, invokes the
+// application's post repository to search for matching posts, and renders
+// the "search" template with a data object containing the found posts and
+// the original search term. Rendering errors are logged via the application's
+// logger. The handler writes the rendered output to the provided http.ResponseWriter.
 func (app *application) searchHandler(w http.ResponseWriter, r *http.Request) {
 	term := r.URL.Query().Get("q")
-	results := app.searchPosts(term)
+
+	if term == "" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	if len(term) > 200 {
+		app.logger.Error("seach term too long", "length", len(term))
+		http.Error(w, "Search term too long", http.StatusBadRequest)
+		return
+	}
+
+	results := app.postRepo.SearchPosts(term)
 
 	data := struct {
 		Posts []models.Post
@@ -165,7 +194,7 @@ func (app *application) searchHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := app.render(w, "search", data)
 	if err != nil {
-		app.logger.Error(err.Error(), "error fetching posts", "error")
-		return
+		app.logger.Error("render failed", "error", err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }

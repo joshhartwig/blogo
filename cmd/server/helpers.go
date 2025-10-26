@@ -1,25 +1,24 @@
 package main
 
 import (
-	"errors"
+	"fmt"
 	"math"
 	"net/http"
 	"strings"
-
-	"github.com/joshhartwig/blogo/internal/models"
 )
 
 // render executes a template with the passed in data
 func (app *application) render(w http.ResponseWriter, templateName string, data any) error {
 	v, ok := app.templateCache[templateName]
 	if !ok {
-		app.logger.Error("error: template not found")
-		return errors.New("error: template not found")
+		err := fmt.Errorf("template not found: %s", templateName)
+		app.logger.Error(err.Error())
+		return err
 	}
 
 	err := v.ExecuteTemplate(w, "base", data)
 	if err != nil {
-		app.logger.Error(err.Error())
+		app.logger.Error("template execution failed", "error", err.Error())
 		return err
 	}
 	return nil
@@ -37,17 +36,4 @@ func calculateDuration(content string) int {
 
 	duration := float64(len(words)) / float64(wordsPerMinute)
 	return int(math.Round(duration) + 1)
-}
-
-// searchPosts will search post content for the terms and return the results
-func (app *application) searchPosts(term string) []models.Post {
-	posts := []models.Post{}
-
-	for _, post := range app.markdownCache {
-		if strings.Contains(string(post.Content), term) {
-			posts = append(posts, post)
-		}
-	}
-
-	return posts
 }

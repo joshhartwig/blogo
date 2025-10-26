@@ -14,7 +14,7 @@ func TestTemplateCache(t *testing.T) {
 		"templates/partials/footer.html": {Data: []byte(`<footer>Footer</footer>`)},
 	}
 
-	cache, err := TemplateCache(testFs, "templates/pages/*.html", "templates/partials/*.html", "templates/base.html")
+	cache, err := LoadTemplatesAsMap(testFs, "templates/pages/*.html", "templates/partials/*.html", "templates/base.html")
 	if err != nil {
 		t.Errorf("caught error testing template cache reading %v", err)
 	}

@@ -27,10 +27,10 @@ type application struct {
 	markdownCache map[string]models.Post        // used to search for markdown by slug name
 	contentPath   string
 	logger        *slog.Logger
-	posts         []models.Post // used to keep track off all posts
-	postsPerPage  int
-	postRepo      posts.PostRepository
-	cfg           config
+
+	postsPerPage int
+	postRepo     posts.PostRepository
+	cfg          config
 }
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{AddSource: false}))
 
-	templateCache, err := TemplateCache(os.DirFS(
+	templateCache, err := LoadTemplatesAsMap(os.DirFS(
 		"./ui/templates/"),
 		"pages/*.html",
 		"partials/*.html",
@@ -73,7 +73,6 @@ func main() {
 		templateCache: templateCache,
 		markdownCache: markdown,
 		contentPath:   cfg.contentPath,
-		posts:         allPosts,
 		postsPerPage:  *postsPerPage,
 		postRepo:      posts.NewPostRepository(allPosts),
 		cfg:           cfg,

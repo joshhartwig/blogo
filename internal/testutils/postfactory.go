@@ -85,10 +85,6 @@ func NewPost(opts ...PostOption) models.Post {
 	return post
 }
 
-func init() {
-	rand.NewSource(time.Now().UnixNano())
-}
-
 // WithRandomDate sets a random date within the last year (adjust range as needed).
 func WithRandomDate() PostOption {
 	return func(p *models.Post) {

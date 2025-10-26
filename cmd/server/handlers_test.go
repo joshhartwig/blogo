@@ -55,7 +55,7 @@ func returnMockedApp() (application, error) {
 		"templates/partials/footer.html": {Data: []byte(`<footer>Footer</footer>`)},
 	}
 
-	templates, err := TemplateCache(
+	templates, err := LoadTemplatesAsMap(
 		testFs,
 		"templates/pages/*.html",
 		"templates/partials/*.html",
