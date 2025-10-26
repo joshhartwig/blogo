@@ -1,3 +1,5 @@
+// Package models provides core data structures for the blog application,
+// including Post, Pagination, and RSS feed types.
 package models
 
 import (

@@ -12,8 +12,14 @@ import (
 	"time"
 
 	"github.com/joshhartwig/blogo/internal/models"
-	"github.com/joshhartwig/blogo/internal/postrepo"
+	"github.com/joshhartwig/blogo/internal/posts"
 )
+
+type config struct {
+	port        int
+	env         string
+	contentPath string
+}
 
 type application struct {
 	port          string
@@ -23,12 +29,16 @@ type application struct {
 	logger        *slog.Logger
 	posts         []models.Post // used to keep track off all posts
 	postsPerPage  int
-	postRepo      postrepo.PostRepository
+	postRepo      posts.PostRepository
+	cfg           config
 }
 
 func main() {
-	port := flag.Int("port", 3999, "port to listen on")
-	contentPath := flag.String("content", "./content/", "path on file sytem for content")
+	var cfg config
+	flag.IntVar(&cfg.port, "port", 3999, "Server Port")
+	flag.StringVar(&cfg.env, "env", "development", "Environment (development|production)")
+	flag.StringVar(&cfg.contentPath, "content", "./content/", "path on file sytem for content")
+
 	postsPerPage := flag.Int("posts per page", 5, "sets the default count of posts per page")
 
 	flag.Parse()
@@ -41,37 +51,39 @@ func main() {
 		"partials/*.html",
 		"base.html",
 	)
+
 	if err != nil {
 		fmt.Println("Unable to create template cache, exiting to OS", err)
 		os.Exit(1)
 	}
 
 	// fetch posts from content folder
-	markdown, err := readMarkdownContent(os.DirFS(*contentPath))
+	markdown, err := readMarkdownContent(os.DirFS(cfg.contentPath))
 	if err != nil {
 		fmt.Println("Error reading markdown content: ", err)
 	}
 
 	// add all posts to the post list
-	posts := []models.Post{}
+	allPosts := []models.Post{}
 	for _, p := range markdown {
-		posts = append(posts, p)
+		allPosts = append(allPosts, p)
 	}
 
 	app := application{
-		logger:        logger,
 		templateCache: templateCache,
 		markdownCache: markdown,
-		contentPath:   *contentPath,
-		posts:         posts,
+		contentPath:   cfg.contentPath,
+		posts:         allPosts,
 		postsPerPage:  *postsPerPage,
-		postRepo:      postrepo.NewPostRepository(posts),
+		postRepo:      posts.NewPostRepository(allPosts),
+		cfg:           cfg,
+		logger:        logger,
 	}
 
 	srv := http.Server{
-		Addr:         fmt.Sprintf(":%d", *port),
+		Addr:         fmt.Sprintf(":%d", cfg.port),
 		Handler:      app.routes(),
-		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		ErrorLog:     slog.NewLogLogger(app.logger.Handler(), slog.LevelError),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,

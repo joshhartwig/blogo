@@ -2,7 +2,6 @@ package main
 
 import (
 	"html/template"
-	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -76,7 +75,6 @@ func returnMockedApp() (application, error) {
 		Content: template.HTML("<h1>markdown</h1>"),
 	}
 	app := &application{
-		logger:        slog.New(slog.DiscardHandler),
 		markdownCache: posts,
 		templateCache: templates,
 	}

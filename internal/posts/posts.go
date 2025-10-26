@@ -1,7 +1,6 @@
-package postrepo
+package posts
 
 import (
-	"fmt"
 	"slices"
 	"strings"
 
@@ -121,9 +120,9 @@ func (p *PostRepository) GetTopPosts(count int) []models.Post {
 	}
 
 	if count > len(p.Posts) {
-		return p.Posts[0 : len(p.Posts)-1]
+		return p.Posts[0:len(p.Posts)]
 	}
-	fmt.Printf("GetTopPosts: count:%d postCount:%d", count, len(p.Posts))
+
 	return p.Posts[0:count]
 }
 

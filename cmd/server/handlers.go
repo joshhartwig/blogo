@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/xml"
-	"fmt"
 	"net/http"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -47,15 +47,6 @@ func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// middleware outputs the method and uri the request is hitting on the server
-func (app *application) middleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("<= %s | %s \n", r.Method, r.URL)
-		w.Header().Set("Content-Type", "text/html")
-		next.ServeHTTP(w, r)
-	})
-}
-
 // about handler renders the about page
 func (app *application) aboutHandler(w http.ResponseWriter, r *http.Request) {
 	if err := app.render(w, "about", nil); err != nil {
@@ -72,12 +63,11 @@ func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) 
 			page = n
 		}
 	}
-	fmt.Println("page:", page)
-	fmt.Printf("param:%d postsPerPage:%d posts:%d", page, app.postsPerPage, len(app.postRepo.Posts))
+
 	pagination := models.NewPagination(page, app.postsPerPage, len(app.postRepo.Posts))
 	start := pagination.PostsStart
 	end := pagination.PostsEnd
-	fmt.Println("pagination:", pagination)
+
 	data := models.HomePageData{
 		Posts:      app.postRepo.GetPostsBetweenRange(start, end),
 		Pagination: pagination,
@@ -93,15 +83,20 @@ func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) 
 func (app *application) showPostHandler(w http.ResponseWriter, r *http.Request) {
 	slug := r.PathValue("slug") // fetch the slug
 
-	if slug == "" {
-		app.logger.Info("path not found", "info", slug, "handler", "post")
-		http.Redirect(w, r, "/", http.StatusNoContent) // if slug contains no content redirect to home
+	if slug == "" || len(slug) > 200 {
+		app.logger.Warn("path not found", "info", slug, "handler", "post")
+		http.Redirect(w, r, "/notfoud ", http.StatusSeeOther)
+		return
+	}
+
+	if !isValidSlug(slug) {
+		app.logger.Warn("invalid slug format", "slug", slug)
+		http.Redirect(w, r, "/notfound", http.StatusSeeOther)
 		return
 	}
 
 	post, ok := app.markdownCache[slug]
 	if !ok {
-		fmt.Println("post not found, redirecting")
 		http.Redirect(w, r, "/notfound", http.StatusSeeOther)
 		return
 	}
@@ -111,6 +106,15 @@ func (app *application) showPostHandler(w http.ResponseWriter, r *http.Request) 
 
 func (app *application) projectsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("not implemented"))
+}
+
+// isValidSlug reports whether slug is a non-empty, ASCII-only slug suitable for URLs:
+// it returns true only if slug consists solely of lowercase letters (a–z), digits (0–9)
+// and hyphens (-) and contains at least one character. Uppercase letters, spaces,
+// underscores and other punctuation are not permitted.
+func isValidSlug(slug string) bool {
+	matched, _ := regexp.MatchString(`^[a-z0-9-]+$`, slug)
+	return matched
 }
 
 func (app *application) rssHandler(w http.ResponseWriter, r *http.Request) {
