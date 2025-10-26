@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on </title>
+    <link>//localhost:51348/tags/</link>
+    <description>Recent content in Tags on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 20 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:51348/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>#Blog</title>
+      <link>//localhost:51348/tags/%23blog/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/tags/%23blog/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>#Development</title>
+      <link>//localhost:51348/tags/%23development/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/tags/%23development/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>#Go</title>
+      <link>//localhost:51348/tags/%23go/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/tags/%23go/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>#Go #Development</title>
+      <link>//localhost:51348/tags/%23go-%23development/</link>
+      <pubDate>Mon, 15 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/tags/%23go-%23development/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>#CSS</title>
+      <link>//localhost:51348/tags/%23css/</link>
+      <pubDate>Mon, 01 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/tags/%23css/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>#Webdev</title>
+      <link>//localhost:51348/tags/%23webdev/</link>
+      <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/tags/%23webdev/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>#Life #Go #Development</title>
+      <link>//localhost:51348/tags/%23life-%23go-%23development/</link>
+      <pubDate>Thu, 09 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/tags/%23life-%23go-%23development/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

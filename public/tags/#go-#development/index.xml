@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>#Go #Development on </title>
+    <link>//localhost:51348/tags/%23go-%23development/</link>
+    <description>Recent content in #Go #Development on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 15 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:51348/tags/%23go-%23development/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hot reloading for Go Projects</title>
+      <link>//localhost:51348/go-use-air/</link>
+      <pubDate>Mon, 15 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/go-use-air/</guid>
+      <description>Why didn&amp;rsquo;t I start using this sooner? A quick guide to hot reloading for Go projects with Air.</description>
+    </item>
+  </channel>
+</rss>

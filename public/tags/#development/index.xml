@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>#Development on </title>
+    <link>//localhost:51348/tags/%23development/</link>
+    <description>Recent content in #Development on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 20 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:51348/tags/%23development/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating a blog in Go part 1</title>
+      <link>//localhost:51348/creating-a-blog-in-go-part-1/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/creating-a-blog-in-go-part-1/</guid>
+      <description>Let&amp;rsquo;s create a simple blog from scratch using Go standard libarry and Markdown</description>
+    </item>
+    <item>
+      <title>Getting Started with Go Templates</title>
+      <link>//localhost:51348/getting-started-with-go-templates/</link>
+      <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/getting-started-with-go-templates/</guid>
+      <description>Learn how to use Go&amp;rsquo;s html/template package to build dynamic, secure web pages with reusable layouts and partials.</description>
+    </item>
+    <item>
+      <title>Modern CSS for Clean Blog Layouts</title>
+      <link>//localhost:51348/modern-css-for-clean-blog-layouts/</link>
+      <pubDate>Mon, 01 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/modern-css-for-clean-blog-layouts/</guid>
+      <description>Explore modern CSS techniques and variables to create beautiful, responsive blog designs inspired by shadcn/ui.</description>
+    </item>
+    <item>
+      <title>Serving Static Files in Go</title>
+      <link>//localhost:51348/serving-static-files-in-go/</link>
+      <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/serving-static-files-in-go/</guid>
+      <description>A quick guide to serving CSS, JavaScript, and images efficiently in your Go web applications.</description>
+    </item>
+  </channel>
+</rss>

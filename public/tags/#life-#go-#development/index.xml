@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>#Life #Go #Development on </title>
+    <link>//localhost:51348/tags/%23life-%23go-%23development/</link>
+    <description>Recent content in #Life #Go #Development on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 09 Jan 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:51348/tags/%23life-%23go-%23development/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>I cannot name things for the life of me</title>
+      <link>//localhost:51348/hello/</link>
+      <pubDate>Thu, 09 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/hello/</guid>
+      <description>Naming things in software is one of the hardest jobs out there. I wanted to focus the second half of the year on building new content. Creating simple things I would use in a new programming language. Here is Blogo, a Blog written in Go.</description>
+    </item>
+  </channel>
+</rss>

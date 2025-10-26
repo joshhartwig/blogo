@@ -54,31 +54,18 @@ func NewPagination(currentPage, postsPerPage, postCount int) Pagination {
 		postsPerPage = 5
 	}
 
-	if currentPage < 1 || currentPage > (postCount/postsPerPage+1) {
-		return Pagination{
-			CurrentPage: 1,
-			NextPage:    1,
-			PrevPage:    1,
-			PostCount:   postCount,
-			PageCount:   getPageCount(postCount, postsPerPage),
-			HasNext:     currentPage < getPageCount(postCount, postsPerPage),
-			HasPrev:     currentPage > 1,
-			PostsStart:  1,
-			PostsEnd:    1 + (postsPerPage - 1),
-		}
-	}
-
-	pageCount := (postCount + postsPerPage - 1) / postsPerPage
-	if pageCount < 1 {
-		pageCount = 1
-	}
-
-	// check the bounds of current page and make sure it falls between our post counts
 	if currentPage < 1 {
 		currentPage = 1
 	}
 
-	start, end := calculatePostStartAndEnd(currentPage, postsPerPage, postCount)
+	pageCount := getPageCount(postCount, postsPerPage)
+
+	if currentPage > pageCount && pageCount > 0 {
+		currentPage = pageCount
+	}
+
+	start := (currentPage - 1) * postsPerPage
+	end := min(start+postsPerPage, postCount)
 
 	return Pagination{
 		CurrentPage: currentPage,
@@ -91,20 +78,6 @@ func NewPagination(currentPage, postsPerPage, postCount int) Pagination {
 		PostsStart:  start,
 		PostsEnd:    end,
 	}
-}
-
-// calculatePostStartAndEnd calculates the start and end indices for paginating a list of posts.
-// It takes the current page number, the number of posts per page, and the total post count as input.
-// The function returns the start and end indices (1-based, inclusive) for the posts to display on the current page.
-// If the calculated end index exceeds the total post count, it is capped at postCount.
-func calculatePostStartAndEnd(currentPage, postsPerPage int, postCount int) (start, end int) {
-	start = (currentPage-1)*postsPerPage + 1
-	end = postsPerPage * currentPage
-	if end > postCount {
-		end = postCount
-	}
-
-	return
 }
 
 func getPageCount(postCount, postsPerPage int) int {

@@ -46,22 +46,24 @@ func (p *PostRepository) GetPostsBetweenRange(x, y int) []models.Post {
 		return []models.Post{}
 	}
 	// set upper bounds
-	upperBounds := len(p.Posts) - 1
+	upperBounds := len(p.Posts)
 
+	// guard against negatives
 	if x < 0 {
 		x = 0
-	}
-
-	if x >= upperBounds {
+	} else if x > upperBounds {
 		x = upperBounds
 	}
 
+	// gaurd against negatives
 	if y < 0 {
 		y = 0
+	} else if y > upperBounds {
+		y = upperBounds
 	}
 
-	if y > upperBounds {
-		y = upperBounds
+	if x > y {
+		x = y
 	}
 
 	return p.Posts[x:y]

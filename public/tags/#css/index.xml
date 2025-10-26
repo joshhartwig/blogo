@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>#CSS on </title>
+    <link>//localhost:51348/tags/%23css/</link>
+    <description>Recent content in #CSS on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 01 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:51348/tags/%23css/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Modern CSS for Clean Blog Layouts</title>
+      <link>//localhost:51348/modern-css-for-clean-blog-layouts/</link>
+      <pubDate>Mon, 01 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51348/modern-css-for-clean-blog-layouts/</guid>
+      <description>Explore modern CSS techniques and variables to create beautiful, responsive blog designs inspired by shadcn/ui.</description>
+    </item>
+  </channel>
+</rss>
