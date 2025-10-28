@@ -45,11 +45,28 @@ func TestHomeHandler_Returns200(t *testing.T) {
 	}
 }
 
+func TestNotFoundHandler(t *testing.T) {
+	app, err := returnMockedApp()
+	if err != nil {
+		t.Errorf("Error fetching mocked app %v", err)
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rr := httptest.NewRecorder()
+
+	app.notFoundHandler(rr, req)
+	got := rr.Body.String()
+	if !strings.Contains(got, "Page Not Found") {
+		t.Errorf("got %s", got)
+	}
+}
+
 func returnMockedApp() (application, error) {
 
 	testFs := fstest.MapFS{
 		"templates/pages/home.html":      {Data: []byte(`{{define "main"}}<h1>Home Page</h1>{{end}}`)},
 		"templates/pages/about.html":     {Data: []byte(`<h1>About Page</h1>`)},
+		"templates/pages/notfound.html":  {Data: []byte(`{{define "main"}}<h1>Page Not Found</h1>{{end}}`)},
 		"templates/base.html":            {Data: []byte(`{{define "base"}}<!DOCTYPE html><html><body>{{template "nav" .}}<main>{{template "main" .}}</main></body></html>{{end}}`)},
 		"templates/partials/nav.html":    {Data: []byte(`{{define "nav"}}<nav>Nav</nav>{{end}}`)},
 		"templates/partials/footer.html": {Data: []byte(`<footer>Footer</footer>`)},

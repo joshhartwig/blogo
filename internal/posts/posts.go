@@ -115,6 +115,9 @@ func (p *PostRepository) SearchPosts(term string) []models.Post {
 // If 'count' exceeds the number of available posts, it is adjusted to avoid out-of-bounds errors.
 // The posts are returned in the order they are stored in the repository.
 func (p *PostRepository) GetTopPosts(count int) []models.Post {
+	if count < 0 {
+		count = 0
+	}
 	if len(p.Posts) == 0 {
 		return []models.Post{}
 	}

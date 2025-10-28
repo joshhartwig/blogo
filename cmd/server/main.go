@@ -39,7 +39,7 @@ func main() {
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|production)")
 	flag.StringVar(&cfg.contentPath, "content", "./content/", "path on file sytem for content")
 
-	postsPerPage := flag.Int("posts per page", 5, "sets the default count of posts per page")
+	postsPerPage := flag.Int("PostsPerPage", 5, "sets the default count of posts per page")
 
 	flag.Parse()
 

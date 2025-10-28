@@ -6,9 +6,15 @@ import (
 )
 
 // middleware outputs the method and uri the request is hitting on the server
-func (app *application) middleware(next http.Handler) http.Handler {
+func (app *application) logRequests(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("<= %s | %s \n", r.Method, r.URL)
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (app *application) setCommon(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		next.ServeHTTP(w, r)
 	})
@@ -28,7 +34,7 @@ func (app *application) middleware(next http.Handler) http.Handler {
 // middleware so these headers are present on responses from downstream handlers.
 // This does not provide a Content-Security-Policy or HSTS; add those headers
 // separately where required.
-func (app *application) securityHeaders(next http.Handler) http.Handler {
+func (app *application) setSecurity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Frame-Options", "deny")
 		w.Header().Set("X-Content-Type-Options", "nosniff")

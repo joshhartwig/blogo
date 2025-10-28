@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -14,7 +15,6 @@ import (
 // ping is used for testing endpoints to ensure handlers are working
 func ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("pong"))
-	w.WriteHeader(http.StatusOK)
 }
 
 // notFoundHandler is intended for posts that are not foud, it will render the notfound template
@@ -32,7 +32,7 @@ func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
 
 	// if the post count is < 5 do the max else do 5
 	if len(app.postRepo.Posts) < 5 {
-		pagePosts = app.postRepo.GetTopPosts(len(app.postRepo.Posts) - 1)
+		pagePosts = app.postRepo.GetTopPosts(min(len(app.postRepo.Posts)))
 	} else {
 		pagePosts = app.postRepo.GetTopPosts(5)
 	}
@@ -81,7 +81,7 @@ func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) 
 
 // postHandler renders our post content assuming the slug is found
 func (app *application) showPostHandler(w http.ResponseWriter, r *http.Request) {
-	slug := r.PathValue("slug") // fetch the slug
+	slug := strings.TrimSpace(r.PathValue("slug")) // fetch the slug
 
 	if slug == "" || len(slug) > 200 {
 		app.logger.Warn("path not found", "info", slug, "handler", "post")
