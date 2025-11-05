@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/xml"
+	"fmt"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -17,12 +18,9 @@ func ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("pong"))
 }
 
-// notFoundHandler is intended for posts that are not foud, it will render the notfound template
+// notFoundHandler is intended for posts that are not found, it will render the notfound template
 func (app *application) notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	if err := app.render(w, "notfound", nil); err != nil {
-		app.logger.Error(err.Error(), "error", "error rendering")
-		http.NotFound(w, r)
-	}
+	app.render(w, http.StatusNotFound, "notfound", nil)
 
 }
 
@@ -41,18 +39,12 @@ func (app *application) homeHandler(w http.ResponseWriter, r *http.Request) {
 		Posts: pagePosts,
 	}
 
-	if err := app.render(w, "home", data); err != nil {
-		app.logger.Error("error rendering template", err.Error(), "error")
-		http.Error(w, "error rendering template", http.StatusInternalServerError)
-	}
+	app.render(w, http.StatusOK, "home", data)
 }
 
 // about handler renders the about page
 func (app *application) aboutHandler(w http.ResponseWriter, r *http.Request) {
-	if err := app.render(w, "about", nil); err != nil {
-		app.logger.Error("render failed", "error", err, "handler", "about")
-		return
-	}
+	app.render(w, http.StatusOK, "about", nil)
 }
 
 // route: /posts lists all posts with paging
@@ -67,16 +59,13 @@ func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) 
 	pagination := models.NewPagination(page, app.postsPerPage, len(app.postRepo.Posts))
 	start := pagination.PostsStart
 	end := pagination.PostsEnd
-
+	fmt.Printf("start %d end %d", start, end)
 	data := models.HomePageData{
 		Posts:      app.postRepo.GetPostsBetweenRange(start, end),
 		Pagination: pagination,
 	}
 
-	if err := app.render(w, "posts", data); err != nil {
-		app.logger.Error("error rendering template", err.Error(), "error")
-		http.Error(w, "error rendering template", http.StatusInternalServerError)
-	}
+	app.render(w, http.StatusOK, "posts", data)
 }
 
 // postHandler renders our post content assuming the slug is found
@@ -101,17 +90,11 @@ func (app *application) showPostHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	app.render(w, "post", post)
+	app.render(w, http.StatusOK, "post", post)
 }
 
 func (app *application) projectsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("not implemented"))
-}
-
-// isValidSlug reports whether slug is a non-empty, ASCII-only slug suitable for URLs
-func isValidSlug(slug string) bool {
-	matched, _ := regexp.MatchString(`^[a-z0-9-]+$`, slug)
-	return matched
 }
 
 // rssHandler generates and writes an RSS XML feed built from the application's markdown cache.
@@ -192,9 +175,11 @@ func (app *application) searchHandler(w http.ResponseWriter, r *http.Request) {
 		Term:  term,
 	}
 
-	err := app.render(w, "search", data)
-	if err != nil {
-		app.logger.Error("render failed", "error", err.Error())
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	}
+	app.render(w, http.StatusOK, "search", data)
+}
+
+// isValidSlug reports whether slug is a non-empty, ASCII-only slug suitable for URLs
+func isValidSlug(slug string) bool {
+	matched, _ := regexp.MatchString(`^[a-z0-9-]+$`, slug)
+	return matched
 }

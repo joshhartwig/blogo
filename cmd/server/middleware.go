@@ -43,3 +43,13 @@ func (app *application) setSecurity(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+func (app *application) logHandler(handlerName string, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		app.logger.Info("handling request",
+			"method", r.Method,
+			"url", r.URL.Path,
+			"handler", handlerName)
+		next.ServeHTTP(w, r)
+	})
+}

@@ -33,6 +33,10 @@ tags:
 # Test2
 `
 
+const testFrontMatterThree = `
+# Test3
+`
+
 func TestConvertMarkdownToHTML(t *testing.T) {
 	want := models.Post{
 		Content: `<h1>Test1</h1>`,
@@ -60,7 +64,6 @@ func TestReadMarkdownReturnPostsInOrder(t *testing.T) {
 	testFs := fstest.MapFS{
 		"file1.md": {Data: []byte(testFrontMatterOne)},
 		"file2.md": {Data: []byte(testFrontMatterTwo)},
-		"file3.md": {Data: []byte(testFrontMatterTwo)},
 	}
 
 	sortedPosts, err := readMarkdownReturnPostsInOrder(testFs)
@@ -80,6 +83,7 @@ func TestReadMarkdownContent(t *testing.T) {
 	testFs := fstest.MapFS{
 		"file1.md": {Data: []byte(testFrontMatterOne)},
 		"file2.md": {Data: []byte(testFrontMatterTwo)},
+		"file3.md": {Data: []byte(testFrontMatterThree)}, // missing front matter
 	}
 	markdownCache, err := readMarkdownContent(testFs)
 	if err != nil {
@@ -101,6 +105,10 @@ func TestReadMarkdownContent(t *testing.T) {
 		{
 			wantSlug:         "file2",
 			wantDataContains: "<h1>Test2</h1>",
+		},
+		{
+			wantSlug:         "file3",
+			wantDataContains: "<h1>Test3</h1>", // ensure file with no front matter is processed
 		},
 	}
 

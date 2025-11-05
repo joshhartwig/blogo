@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"math"
 	"net/http"
@@ -8,20 +9,24 @@ import (
 )
 
 // render executes a template with the passed in data
-func (app *application) render(w http.ResponseWriter, templateName string, data any) error {
+func (app *application) render(w http.ResponseWriter, status int, templateName string, data any) {
 	v, ok := app.templateCache[templateName]
 	if !ok {
 		err := fmt.Errorf("template not found: %s", templateName)
 		app.logger.Error(err.Error())
-		return err
 	}
 
-	err := v.ExecuteTemplate(w, "base", data)
+	buf := new(bytes.Buffer)
+
+	err := v.ExecuteTemplate(buf, "base", data)
 	if err != nil {
 		app.logger.Error("template execution failed", "error", err.Error())
-		return err
 	}
-	return nil
+
+	w.WriteHeader(status)
+
+	// write contents of buffer to response writer
+	buf.WriteTo(w)
 }
 
 // calculateDuration estimates the reading duration in minutes for the given content string.

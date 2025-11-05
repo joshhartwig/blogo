@@ -31,9 +31,10 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 	}
 
 	d := frontmatter.Get(ctx)
-
-	if err := d.Decode(&meta); err != nil {
-		return post, err
+	if d != nil {
+		if err := d.Decode(&meta); err != nil {
+			return post, err
+		}
 	}
 
 	post.Content = template.HTML(out.String())                      // add content to the post

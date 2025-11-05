@@ -3,22 +3,32 @@ package main
 import "net/http"
 
 func (app *application) routes() http.Handler {
-	router := http.NewServeMux()
+	mux := http.NewServeMux()
 
 	// file server
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	router.Handle("GET /static/", http.StripPrefix("/static", fileServer))
+	mux.Handle("GET /static/",
+		http.StripPrefix("/static",
+			http.FileServer(http.Dir("./ui/static/"))))
 
-	router.Handle("/ping", http.HandlerFunc(ping))
-	router.Handle("/rss", http.HandlerFunc(app.rssHandler))
+	// html routes - using security and common headers
+	htmlHandler := func(name string, h http.HandlerFunc) http.Handler {
+		return app.logHandler(name, app.setSecurity(app.setCommon(h)))
+	}
+	mux.Handle("/", htmlHandler("home", app.homeHandler))
+	mux.Handle("/notfound", htmlHandler("notfound", app.notFoundHandler))
+	mux.Handle("/search", htmlHandler("search", app.searchHandler))
+	mux.Handle("/about", htmlHandler("about", app.aboutHandler))
+	mux.Handle("/projects", htmlHandler("projects", app.projectsHandler))
+	mux.Handle("/posts", htmlHandler("listPost", app.listPostHandler))
+	mux.Handle("/posts/{slug}", htmlHandler("showPost", app.showPostHandler))
 
-	router.Handle("/", http.HandlerFunc(app.homeHandler))
-	router.Handle("/notfound", http.HandlerFunc(app.notFoundHandler))
-	router.Handle("/search", http.HandlerFunc(app.searchHandler))
-	router.Handle("/about", http.HandlerFunc(app.aboutHandler))
-	router.Handle("/projects", http.HandlerFunc(app.projectsHandler))
-	router.Handle("/posts", http.HandlerFunc(app.listPostHandler))
-	router.Handle("/posts/{slug}", http.HandlerFunc(app.showPostHandler))
+	// api routes - set security
+	apiHandler := func(h http.HandlerFunc) http.Handler {
+		return app.setSecurity(h)
+	}
 
-	return app.setSecurity(app.setCommon(app.logRequests(router)))
+	mux.Handle("/ping", apiHandler(ping))
+	mux.Handle("/rss", apiHandler(app.rssHandler))
+
+	return app.logRequests(mux)
 }
