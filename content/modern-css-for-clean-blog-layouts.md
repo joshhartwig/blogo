@@ -2,6 +2,7 @@
 title: "Modern CSS for Clean Blog Layouts"
 date: 2025-09-01
 summary: "Explore modern CSS techniques and variables to create beautiful, responsive blog designs inspired by shadcn/ui."
+draft: false
 tags:
   - "#CSS"
   - "#Development"

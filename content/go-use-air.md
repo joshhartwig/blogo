@@ -2,6 +2,7 @@
 title: "Hot reloading for Go Projects"
 date: 2025-09-15
 summary: "Why didn't I start using this sooner? A quick guide to hot reloading for Go projects with Air."
+draft: false
 tags:
   - "#Go #Development"
 ---

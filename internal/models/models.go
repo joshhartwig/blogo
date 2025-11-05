@@ -109,6 +109,7 @@ type PostMetadata struct {
 	Date            time.Time `yaml:"date"`
 	Tags            []string  `yaml:"tags"`
 	Summary         string    `yaml:"summary"`
+	Draft           bool      `yaml:"draft"`
 	Slug            string
 	ReadingDuration int
 }

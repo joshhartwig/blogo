@@ -14,6 +14,7 @@ const testFrontMatterOne = `
 title: "test1"
 date: 2025-09-01
 summary: "test summary"
+draft: false
 tags:
   - "#tag1"
   - "#tag2"
@@ -26,6 +27,7 @@ const testFrontMatterTwo = `
 title: "test2"
 date: 2025-09-02
 summary: "test summary"
+draft: false
 tags:
   - "#tag1"
   - "#tag2"
@@ -35,6 +37,19 @@ tags:
 
 const testFrontMatterThree = `
 # Test3
+`
+
+const testFrontMatterFour = `
+---
+title: "test4"
+date: 2025-09-06
+summary: "test summary"
+draft: true
+tags:
+  - "#tag1"
+  - "#tag2"
+---
+# Test4
 `
 
 func TestConvertMarkdownToHTML(t *testing.T) {
@@ -84,6 +99,7 @@ func TestReadMarkdownContent(t *testing.T) {
 		"file1.md": {Data: []byte(testFrontMatterOne)},
 		"file2.md": {Data: []byte(testFrontMatterTwo)},
 		"file3.md": {Data: []byte(testFrontMatterThree)}, // missing front matter
+		"file4.md": {Data: []byte(testFrontMatterFour)},  // draft = true should not show
 	}
 	markdownCache, err := readMarkdownContent(testFs)
 	if err != nil {

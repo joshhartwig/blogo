@@ -2,6 +2,7 @@
 title: "Getting Started with Go Templates"
 date: 2025-09-14
 summary: "Learn how to use Go's html/template package to build dynamic, secure web pages with reusable layouts and partials."
+draft: false
 tags:
   - "#Go"
   - "#Development"

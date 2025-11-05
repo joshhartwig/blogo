@@ -103,6 +103,10 @@ func readMarkdownContent(fileSystem fs.FS) (map[string]models.Post, error) {
 		if err != nil {
 			return nil, err
 		}
+		if post.Metadata.Draft {
+			// skip draft posts
+			continue
+		}
 		posts[slug] = post // add markdown to cache
 	}
 

@@ -3,6 +3,7 @@ title: "I cannot name things for the life of me"
 date: 2025-01-09
 summary: "Naming things in software is one of the hardest jobs out there. I wanted to focus the second half of the year on building
 new content. Creating simple things I would use in a new programming language. Here is Blogo, a Blog written in Go."
+draft: false
 tags:
   - "#Life #Go #Development"
 ---

@@ -2,6 +2,7 @@
 title: "Building a blog in Go Part 1"
 date: 2025-11-03
 summary: "Building a simple blog in 3 parts"
+draft: true
 tags:
   - "#Go"
   - "#Development"
