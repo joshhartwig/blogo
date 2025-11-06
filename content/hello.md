@@ -5,10 +5,15 @@ summary: "Naming things in software is one of the hardest jobs out there. I want
 new content. Creating simple things I would use in a new programming language. Here is Blogo, a Blog written in Go."
 draft: false
 tags:
-  - "#Life #Go #Development"
+  - "#Life"
+  - "#Go"
+  - "#Development"
 ---
 
 ## Blogo
+
+Hi
+![Alt text](/static/img/hand.png)
 
 This is a **sample post** to test markdown rendering.
 
