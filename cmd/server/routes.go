@@ -19,7 +19,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("/search", htmlHandler("search", app.searchHandler))
 	mux.Handle("/about", htmlHandler("about", app.aboutHandler))
 	mux.Handle("/projects", htmlHandler("projects", app.projectsHandler))
-	mux.Handle("/posts", htmlHandler("listPost", app.listPostHandler))
+	mux.Handle("/posts/", htmlHandler("listPost", app.listPostHandler))
 	mux.Handle("/posts/{slug}", htmlHandler("showPost", app.showPostHandler))
 
 	// api routes - set security

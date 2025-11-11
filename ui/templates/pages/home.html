@@ -1,29 +1,25 @@
 {{define "title"}}Home{{end}}
 
 {{define "main"}}
-<section class="blog-header">
-  <h1>Welcome to Josh's Blog</h1>
-  <p class="subtitle intro">
-    An unserious blog from someone that has been in IT for 25 years. My views are mine and are not representive of my employer. This blog
-    covers topic from Homelabs, Docker, Development, Go and anything else I like to get into. Maybe even the occasional electronic project.
-    I hope you enjoy the content!
-  </p>
-</section>
+<main class="container">
+  <header class="blog-header">
+    <h1>Josh's Blog</h1>
+    <p class="subtitle">
+      An unserious blog from someone that has been in IT for 25 years. My views are mine and are not representative of my employer. This blog covers topics from Homelabs, Docker, Development, Go, and anything else I like to get into. Maybe even the occasional electronic project. I hope you enjoy the content!
+    </p>
+  </header>
 
-<section class="posts">
-  <div class="posts-list">
-    {{if .Posts}}
-      {{range .Posts}}
-        <article class="post-item">
-          <a href="/post/{{.Metadata.Slug}}" class="post-link">
-            <span class="post-title">{{.Metadata.Title}}</span>
-            <span class="post-date">{{.Metadata.Date.Format "Jan 2, 2006"}}</span>
-          </a>
-        </article>
-      {{end}}
-    {{else}}
-    <h2>No posts found</h2>
+  <section class="posts-list" aria-label="Blog posts">
+    {{range .Posts}}
+      <article class="post-item">
+        <h2 class="post-title">
+          <a href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a>
+        </h2>
+        <time class="post-date" datetime="{{.Metadata.Date.Format "2006-01-02"}}">
+          {{.Metadata.Date.Format "January 2, 2006"}}
+        </time>
+      </article>
     {{end}}
-</div>
-</section>
+  </section>
+</main>
 {{end}}
