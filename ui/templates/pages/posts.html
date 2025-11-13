@@ -2,30 +2,24 @@
 
 {{define "main"}}
 <!-- Posts -->
-<main class="container">
-<section class="blog-list">
   {{if .Posts}}
+    <section class="posts-list" aria-label="Blog posts">
     {{range .Posts}}
-      <article>
-        <h2><a href="/posts/{{.Metadata.Slug}}" class="post-title-link">{{.Metadata.Title}}</a></h2>
-        <p class="meta">
-          Posted on {{humanDate .Metadata.Date}} <span class="dot"></span> {{.Metadata.ReadingDuration}} min read
-        </p>
-        {{if .Metadata.Tags}}
-        <div class="tags">
-          {{range .Metadata.Tags}}
-            <span class="tag">{{.}}</span>
-          {{end}}
-        </div>
-        {{end}}
-        <p>{{.Metadata.Summary}}</p>
-        <a href="/posts/{{.Metadata.Slug}}" class="read-more">Read more →</a>
+      <article class="post-item">
+        <h2 class="post-title">
+          <a href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a>
+        </h2>
+        <time class="post-date" datetime="{{.Metadata.Date.Format "2006-01-02"}}">
+          {{.Metadata.Date.Format "January 2, 2006"}}
+        </time>
+        <p class="post-summary">{{.Metadata.Summary}}</p>
+        
       </article>
     {{end}}
+  </section>
   {{else}}
     <h2>No posts found</h2>
   {{end}}
-  </section>
   
   <!-- Pagination -->
   {{if gt .Pagination.PageCount 1}}
@@ -43,5 +37,4 @@
       {{end}}
     </nav>
     {{end}}
-    </main>
 {{end}}
