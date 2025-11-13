@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/xml"
-	"fmt"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -59,7 +58,7 @@ func (app *application) listPostHandler(w http.ResponseWriter, r *http.Request) 
 	pagination := models.NewPagination(page, app.postsPerPage, len(app.postRepo.Posts))
 	start := pagination.PostsStart
 	end := pagination.PostsEnd
-	fmt.Printf("start %d end %d", start, end)
+	//fmt.Printf("start %d end %d %v", start, end, pagination)
 	data := models.HomePageData{
 		Posts:      app.postRepo.GetPostsBetweenRange(start, end),
 		Pagination: pagination,
