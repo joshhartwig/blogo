@@ -2,6 +2,7 @@
 
 {{define "main"}}
 <!-- Posts -->
+<main class="container">
 <section class="blog-list">
   {{if .Posts}}
     {{range .Posts}}
@@ -25,6 +26,7 @@
     <h2>No posts found</h2>
   {{end}}
   </section>
+  
   <!-- Pagination -->
   {{if gt .Pagination.PageCount 1}}
     <nav class="pagination">
@@ -41,4 +43,5 @@
       {{end}}
     </nav>
     {{end}}
+    </main>
 {{end}}
