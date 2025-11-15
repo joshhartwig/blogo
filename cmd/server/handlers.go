@@ -93,7 +93,7 @@ func (app *application) showPostHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 func (app *application) projectsHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("not implemented"))
+	app.render(w, http.StatusOK, "projects", nil)
 }
 
 // rssHandler generates and writes an RSS XML feed built from the application's markdown cache.

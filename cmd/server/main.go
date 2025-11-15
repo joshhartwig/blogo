@@ -22,7 +22,6 @@ type config struct {
 }
 
 type application struct {
-	port          string
 	templateCache map[string]*template.Template // use to search for template by name
 	markdownCache map[string]models.Post        // used to search for markdown by slug name
 	contentPath   string
@@ -66,8 +65,10 @@ func main() {
 	// add all posts to the post list
 	allPosts := []models.Post{}
 	for _, p := range markdown {
+		fmt.Printf("processing post - %s\n", p.Metadata.Title)
 		allPosts = append(allPosts, p)
 	}
+	fmt.Printf("\ntotal post count: %d\n", len(allPosts))
 
 	app := application{
 		templateCache: templateCache,
@@ -88,6 +89,6 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	fmt.Printf("Starting server on port%s\n", app.port)
+	fmt.Printf("\nstarting your blog on port :%d\n", cfg.port)
 	log.Fatal(srv.ListenAndServe())
 }
