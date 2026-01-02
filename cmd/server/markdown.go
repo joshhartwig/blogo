@@ -9,8 +9,10 @@ import (
 	"slices"
 	"strings"
 
+	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 	"github.com/joshhartwig/blogo/internal/models"
 	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/parser"
 	"go.abhg.dev/goldmark/frontmatter"
 )
@@ -22,7 +24,11 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 	meta := models.PostMetadata{}
 
 	out := bytes.Buffer{}
-	gm := goldmark.New(goldmark.WithExtensions(&frontmatter.Extender{}))
+	gm := goldmark.New(goldmark.WithExtensions(
+		&frontmatter.Extender{}, highlighting.NewHighlighting(
+			highlighting.WithStyle("monokai"),
+			highlighting.WithFormatOptions(chromahtml.WithLineNumbers(true)),
+		)))
 	ctx := parser.NewContext()
 
 	err := gm.Convert(data, &out, parser.WithContext(ctx))

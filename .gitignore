@@ -32,4 +32,5 @@ Thumbs.db
 .env
 
 #temp
+tmp/
 tmp/main
