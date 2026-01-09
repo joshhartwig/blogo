@@ -16,6 +16,9 @@
   --space-6: 1.1rem;
   --space-8: 2rem;
   --space-12: 3rem;
+
+  --accent: #2563eb;
+  --accent-soft: rgba(37, 99, 235, 0.10);
 }
 
 /* Reset and base styles */
@@ -62,6 +65,15 @@ body {
   line-height: 1.2;
 }
 
+/* Optional personality: small symbol before the home page title */
+.blog-header h1::before {
+  content: "◦";
+  color: var(--accent);
+  margin-right: 0.5rem;
+  font-size: 1.1em;
+  vertical-align: baseline;
+}
+
 .subtitle {
   font-size: 1rem;
   line-height: 1.50;
@@ -74,7 +86,8 @@ body {
 .posts-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  /*gap: var(--space-4);*/
+  gap: var(0)
 }
 
 .post-item {
@@ -125,18 +138,17 @@ body {
 }
 
 .post-title a:hover {
-  color: var(--muted);
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 .post-date {
-  display: block;
-  letter-spacing: 0.08em;
-  font-size: 0.75rem; 
-  font-size: 0.875rem;
+  margin: 0.15rem 0 0;     /* less vertical space */
+  font-size: 0.8rem;       /* smaller */
+  letter-spacing: 0.02em;  /* less shouty */
   color: var(--muted);
-  font-weight: 400;
-  white-space: nowrap;
-  flex-shrink: 0;
+  opacity: 0.85;
 }
 
 .content code,
@@ -196,7 +208,7 @@ body {
 }
 
 .nav a:hover {
-  color: var(--muted);
+  color: var(--accent);
 }
 
 .nav .spacer {
@@ -262,7 +274,11 @@ body {
   }
 
   .post-date {
-    font-size: 0.8125rem;
+    margin: 0.15rem 0 0;     /* less vertical space */
+    font-size: 0.8rem;       /* smaller */
+    letter-spacing: 0.02em;  /* less shouty */
+    color: var(--muted);
+    opacity: 0.85;
   }
 
   .nav {

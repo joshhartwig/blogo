@@ -19,6 +19,7 @@ type config struct {
 	port        int
 	env         string
 	contentPath string
+	theme       string
 }
 
 type application struct {
@@ -37,6 +38,7 @@ func main() {
 	flag.IntVar(&cfg.port, "port", 3999, "Server Port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|production)")
 	flag.StringVar(&cfg.contentPath, "content", "./content/", "path on file sytem for content")
+	flag.StringVar(&cfg.theme, "theme", "default/", "specify the name of a theme folder in /ui/themes ex /ui/themes/default")
 
 	postsPerPage := flag.Int("PostsPerPage", 5, "sets the default count of posts per page")
 
@@ -44,11 +46,12 @@ func main() {
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{AddSource: false}))
 
-	templateCache, err := LoadTemplatesAsMap(os.DirFS(
-		"./ui/templates/"),
-		"pages/*.html",
-		"partials/*.html",
-		"base.html",
+	themeDir := os.DirFS(fmt.Sprintf("themes/%s", cfg.theme))
+	templateCache, err := LoadTemplatesAsMap(
+		themeDir,
+		"templates/pages/*.html",
+		"templates/partials/*.html",
+		"templates/base.html",
 	)
 
 	if err != nil {
