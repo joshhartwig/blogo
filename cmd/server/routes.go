@@ -7,11 +7,11 @@ import (
 
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
-
+	fmt.Println("theme", app.cfg.theme)
 	// file server
 	mux.Handle("GET /static/",
 		http.StripPrefix("/static",
-			http.FileServer(http.Dir(fmt.Sprintf(".%s/ui/static", app.cfg.theme)))))
+			http.FileServer(http.Dir(fmt.Sprintf("./themes/%s/static", app.cfg.theme)))))
 
 	// html routes - using security and common headers
 	htmlHandler := func(name string, h http.HandlerFunc) http.Handler {

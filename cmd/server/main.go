@@ -38,11 +38,12 @@ func main() {
 	flag.IntVar(&cfg.port, "port", 3999, "Server Port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|production)")
 	flag.StringVar(&cfg.contentPath, "content", "./content/", "path on file sytem for content")
-	flag.StringVar(&cfg.theme, "theme", "default/", "specify the name of a theme folder in /ui/themes ex /ui/themes/default")
+	flag.StringVar(&cfg.theme, "theme", "default", "specify the name of a theme folder in /ui/themes ex /ui/themes/default")
 
 	postsPerPage := flag.Int("PostsPerPage", 5, "sets the default count of posts per page")
 
 	flag.Parse()
+	fmt.Println(os.Args)
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{AddSource: false}))
 
