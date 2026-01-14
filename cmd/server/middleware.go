@@ -8,7 +8,7 @@ import (
 // middleware outputs the method and uri the request is hitting on the server
 func (app *application) logRequests(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("\t-> %s | %s \n", r.Method, r.URL)
+		fmt.Printf("-> %s | %s \n", r.Method, r.URL)
 		next.ServeHTTP(w, r)
 	})
 }

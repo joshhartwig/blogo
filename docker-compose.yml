@@ -1,0 +1,6 @@
+services:
+  blogo:
+    build: .
+    image: blogo:local
+    ports:
+      - "3998:3999"
