@@ -1,6 +1,6 @@
 # Blogo
 
-A blog in Go. I spent a bit of time learning Go this year and had not put it to use much. As I close out 2025, I have a few projects I want to wrap leveraging Go. While there is a million blogs out there with better features and better written, this one is mine.
+Blogo is a lightweight, fast, and customizable blog engine written in Go, designed to run with minimal dependencies. It reads content directly from Markdown files, supports flexible theming, and leverages Go’s standard library for reliable performance. Themes are easy to create and manage, combining templates, CSS, and JavaScript for a unique look and feel. Blogo is ideal for anyone who wants a simple, efficient blogging platform that’s easy to extend and maintain.
 
 ![Screenshot of Blogo](blog.png)
 
@@ -14,6 +14,9 @@ A blog in Go. I spent a bit of time learning Go this year and had not put it to 
 # Clone the repository
 git clone https://github.com/joshhartwig/blogo.git
 cd blogo
+
+# Build and Start the container
+docker compose up --build
 ```
 
 ## Features
@@ -24,7 +27,7 @@ cd blogo
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.
+None needed.
 
 ## License
 
