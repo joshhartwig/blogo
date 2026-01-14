@@ -1,6 +1,9 @@
 services:
   blogo:
-    build: .
-    image: blogo:local
+    image: ghcr.io/joshhartwig/blogo:latest
+    container_name: blogo
+    restart: unless-stopped
     ports:
-      - "3998:3999"
+      - "3999:3999"
+    volumes:
+      - ./content:/app/content:ro
