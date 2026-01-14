@@ -66,10 +66,12 @@ func main() {
 		fmt.Println("Error reading markdown content: ", err)
 	}
 
+	fmt.Printf("\nStarting Server...\n")
+
 	// add all posts to the post list
 	allPosts := []models.Post{}
 	for _, p := range markdown {
-		fmt.Printf("processing post - %s\n", p.Metadata.Title)
+		fmt.Printf("found post - %s\n", p.Metadata.Title)
 		allPosts = append(allPosts, p)
 	}
 	fmt.Printf("\ntotal post count: %d\n", len(allPosts))
@@ -93,6 +95,6 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	fmt.Printf("\nstarting your blog on port :%d\n", cfg.port)
+	fmt.Printf("\nWeb Server running on port :%d\n", cfg.port)
 	log.Fatal(srv.ListenAndServe())
 }

@@ -1,10 +1,12 @@
 # Blogo
 
-A blog in Go. I spent a bit of time learning Go this year and had not put it to use much. As I close out 2025, I have a few projects I want to wrap leveraging Go. While there is a million blogs out there with better features and better written, this one is mine. This was not vibecoded, the only usage of AI was around documenting function names and the occasional question.
+A blog in Go. I spent a bit of time learning Go this year and had not put it to use much. As I close out 2025, I have a few projects I want to wrap leveraging Go. While there is a million blogs out there with better features and better written, this one is mine.
+
+![Screenshot of Blogo](blog.png)
 
 ## TODO
 
-- Add themes
+- Fix the theme support to reduce duplication in code
 
 ## Installation
 

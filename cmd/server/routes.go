@@ -7,7 +7,7 @@ import (
 
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
-	fmt.Println("theme", app.cfg.theme)
+
 	// file server
 	mux.Handle("GET /static/",
 		http.StripPrefix("/static",
