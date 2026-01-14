@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"path/filepath"
 
 	"log/slog"
 	"net/http"
@@ -20,6 +21,7 @@ type config struct {
 	env         string
 	contentPath string
 	theme       string
+	themesPath  string
 }
 
 type application struct {
@@ -37,8 +39,9 @@ func main() {
 	var cfg config
 	flag.IntVar(&cfg.port, "port", 3999, "Server Port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|production)")
-	flag.StringVar(&cfg.contentPath, "content", "./content/", "path on file sytem for content")
-	flag.StringVar(&cfg.theme, "theme", "default", "specify the name of a theme folder in /ui/themes ex /ui/themes/default")
+	flag.StringVar(&cfg.contentPath, "content", "./content/", "Path to the directory containing markdown content files (e.g., ./content/)")
+	flag.StringVar(&cfg.themesPath, "theme path", "themes", "Path to the directory containing all theme folders (e.g., themes)")
+	flag.StringVar(&cfg.theme, "theme", "default", "Name of the theme folder to use (e.g., default, darkblue). Should match a folder under the themes path.")
 
 	postsPerPage := flag.Int("PostsPerPage", 5, "sets the default count of posts per page")
 
@@ -47,7 +50,7 @@ func main() {
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{AddSource: false}))
 
-	themeDir := os.DirFS(fmt.Sprintf("themes/%s", cfg.theme))
+	themeDir := os.DirFS(filepath.Join(cfg.themesPath, cfg.theme))
 	templateCache, err := LoadTemplatesAsMap(
 		themeDir,
 		"templates/pages/*.html",
