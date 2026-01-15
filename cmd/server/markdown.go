@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+	"time"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 	"github.com/joshhartwig/blogo/internal/models"
@@ -41,6 +42,15 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 		if err := d.Decode(&meta); err != nil {
 			return post, err
 		}
+	}
+
+	// we had no frontmatter see issue https://github.com/joshhartwig/blogo/issues/9
+	if meta.Title == "" {
+		meta.Title = "post missing frontmatter"
+		meta.Date = time.Now()
+		meta.Draft = false
+		meta.Slug = "post missing frontmatter"
+		meta.Summary = "post missing frontmatter"
 	}
 
 	post.Content = template.HTML(out.String())                      // add content to the post
@@ -105,7 +115,8 @@ func readMarkdownContent(fileSystem fs.FS) (map[string]models.Post, error) {
 		}
 
 		slug := strings.TrimSuffix(filepath.Base(path), ".md") // get the title name for the map
-		post, err := convertMarkdownToHtml(slug, data)         // convert the markdown file into a post struct
+
+		post, err := convertMarkdownToHtml(slug, data) // convert the markdown file into a post struct
 		if err != nil {
 			return nil, err
 		}

@@ -1,13 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"path/filepath"
 )
 
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
-
+	fmt.Println("path", app.cfg.themesPath, app.cfg.theme, "static")
 	// file server
 	mux.Handle("GET /static/",
 		http.StripPrefix("/static",

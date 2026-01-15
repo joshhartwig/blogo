@@ -52,6 +52,9 @@ tags:
 # Test4
 `
 
+const testMarkDownOne = `# Test 1`
+const testMarkDownTwo = `# Test 2`
+
 func TestConvertMarkdownToHTML(t *testing.T) {
 	want := models.Post{
 		Content: `<h1>Test1</h1>`,
@@ -136,6 +139,30 @@ func TestReadMarkdownContent(t *testing.T) {
 
 		if !strings.Contains(string(post.Content), test.wantDataContains) {
 			t.Errorf("expected test data: %s\n got: %s\n slug: %s", test.wantDataContains, post.Content, test.wantSlug)
+		}
+	}
+
+}
+
+func TestReadInvalidFrontMatter(t *testing.T) {
+	testFs := fstest.MapFS{
+		"file1.md": {Data: []byte(testMarkDownOne)},
+		"file2.md": {Data: []byte(testMarkDownTwo)},
+	}
+	markdownCache, err := readMarkdownContent(testFs)
+	if err != nil {
+		t.Errorf("unable to read markdown content from files %v", err)
+	}
+
+	if len(markdownCache) < 1 {
+		t.Errorf("markdown cache is empty")
+	}
+
+	wantMetaTitle := "post missing frontmatter"
+
+	for _, post := range markdownCache {
+		if post.Metadata.Title != wantMetaTitle {
+			t.Errorf("error wanted a title of %s but got %s", wantMetaTitle, post.Metadata.Title)
 		}
 	}
 

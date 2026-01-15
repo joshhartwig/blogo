@@ -24,7 +24,7 @@ func TestSearchPosts(t *testing.T) {
 	repo := NewPostRepository(testPosts)
 
 	results := repo.SearchPosts("title 1")
-	fmt.Println("results for 1:", results)
+
 	wantCount := 1
 	gotCount := len(results)
 	if gotCount != wantCount {
@@ -33,31 +33,31 @@ func TestSearchPosts(t *testing.T) {
 
 	// Additional tests for SearchPosts
 	results = repo.SearchPosts("content 2")
-	fmt.Println("results for 2:", results)
+
 	if len(results) != 1 || results[0].Metadata.Title != "title 2" {
 		t.Errorf("SearchPosts failed to find post by content")
 	}
 
 	results = repo.SearchPosts("slug3")
-	fmt.Println("results for 3:", results)
+
 	if len(results) != 1 || results[0].Metadata.Title != "title 3" {
 		t.Errorf("SearchPosts failed to find post by slug")
 	}
 
 	results = repo.SearchPosts("summary 4")
-	fmt.Println("results for 4:", results)
+
 	if len(results) != 1 || results[0].Metadata.Title != "title 4" {
 		t.Errorf("SearchPosts failed to find post by summary")
 	}
 
 	results = repo.SearchPosts("#test")
-	fmt.Println("results for #test:", results)
+
 	if len(results) < 1 {
 		t.Errorf("SearchPosts failed to find post by tag")
 	}
 
 	results = repo.SearchPosts("nonexistent")
-	fmt.Println("results:", results)
+
 	if len(results) != 0 {
 		t.Errorf("SearchPosts should return 0 for nonexistent term")
 	}
