@@ -7,7 +7,6 @@ tags:
   - "#Go"
   - "#Development"
 ---
-# Building a blog in Go Part 3
 
 Let's recap what we have done here with parts 1 & 2. We have a server that parses markdown files, we are rendering html templates and showing each post, we are then coverting the markdown into HTML and showing that to the user. We can still improve things quite a bit.
 

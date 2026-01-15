@@ -92,8 +92,6 @@ func TestReadMarkdownReturnPostsInOrder(t *testing.T) {
 	if len(sortedPosts) < len(testFs) {
 		t.Error("should be more then 2 posts")
 	}
-
-	fmt.Println(sortedPosts[0].Metadata.Date)
 }
 
 // Tests readMarkdownContent pulls any markdown files

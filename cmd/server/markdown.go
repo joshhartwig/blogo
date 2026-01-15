@@ -7,7 +7,6 @@ import (
 	"io/fs"
 	"path/filepath"
 	"slices"
-	"strings"
 	"time"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
@@ -79,8 +78,8 @@ func readMarkdownReturnPostsInOrder(fileSystem fs.FS) ([]models.Post, error) {
 			return nil, err
 		}
 
-		slug := strings.TrimSuffix(filepath.Base(path), ".md") // get the title name for the map
-		post, err := convertMarkdownToHtml(slug, data)         // convert the markdown file into a post struct
+		slug := slugify(filepath.Base(path) + ".md")   // get the title name for the map
+		post, err := convertMarkdownToHtml(slug, data) // convert the markdown file into a post struct
 		if err != nil {
 			return nil, err
 		}
@@ -114,7 +113,7 @@ func readMarkdownContent(fileSystem fs.FS) (map[string]models.Post, error) {
 			return nil, err
 		}
 
-		slug := strings.TrimSuffix(filepath.Base(path), ".md") // get the title name for the map
+		slug := slugify(filepath.Base(path)) // get the title name for the map
 
 		post, err := convertMarkdownToHtml(slug, data) // convert the markdown file into a post struct
 		if err != nil {

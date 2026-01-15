@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -41,4 +42,19 @@ func calculateDuration(content string) int {
 
 	duration := float64(len(words)) / float64(wordsPerMinute)
 	return int(math.Round(duration) + 1)
+}
+
+// slugify generates a URL-friendly slug from a string
+func slugify(s string) string {
+	// Remove file extension if present
+	if dot := strings.LastIndex(s, "."); dot != -1 {
+		s = s[:dot]
+	}
+	s = strings.ToLower(s)
+	s = strings.ReplaceAll(s, " ", "-")
+	s = strings.ReplaceAll(s, "_", "-")
+	re := regexp.MustCompile(`[^a-z0-9\-]+`)
+	s = re.ReplaceAllString(s, "")
+	s = strings.Trim(s, "-")
+	return s
 }

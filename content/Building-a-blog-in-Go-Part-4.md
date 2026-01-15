@@ -7,7 +7,8 @@ tags:
   - "#Go"
   - "#Development"
 ---
-# Extra Credit
+
+Extra Credit
 
 I did not want to leave with you hanging with no unit tests or FrontMatter parsing. Let's do some very basic testing on some of the more important functions.
 

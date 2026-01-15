@@ -46,9 +46,10 @@ func main() {
 	postsPerPage := flag.Int("PostsPerPage", 5, "sets the default count of posts per page")
 
 	flag.Parse()
-	fmt.Println(os.Args)
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{AddSource: false}))
+
+	fmt.Printf("\nStarting Server...\n")
 
 	themeDir := os.DirFS(filepath.Join(cfg.themesPath, cfg.theme))
 	templateCache, err := LoadTemplatesAsMap(
@@ -68,8 +69,6 @@ func main() {
 	if err != nil {
 		fmt.Println("Error reading markdown content: ", err)
 	}
-
-	fmt.Printf("\nStarting Server...\n")
 
 	// add all posts to the post list
 	allPosts := []models.Post{}

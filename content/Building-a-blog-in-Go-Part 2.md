@@ -7,7 +7,6 @@ tags:
   - "#Go"
   - "#Development"
 ---
-# Building a blog in Go Part 2
 
 Welcome back!
 
