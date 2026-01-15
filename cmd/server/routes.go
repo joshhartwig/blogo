@@ -1,19 +1,18 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"path/filepath"
 )
 
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
-	fmt.Println("path", app.cfg.themesPath, app.cfg.theme, "static")
+
 	// file server
 	mux.Handle("GET /static/",
 		http.StripPrefix("/static",
 			//http.FileServer(http.Dir(fmt.Sprintf("./themes/%s/static", app.cfg.theme)))))
-			http.FileServer(http.Dir(filepath.Join(app.cfg.themesPath, app.cfg.theme)))))
+			http.FileServer(http.Dir(filepath.Join(app.cfg.themesPath, app.cfg.theme, "static")))))
 
 	// html routes - using security and common headers
 	htmlHandler := func(name string, h http.HandlerFunc) http.Handler {
