@@ -52,6 +52,8 @@ func main() {
 	fmt.Printf("\nStarting Server...\n")
 
 	themeDir := os.DirFS(filepath.Join(cfg.themesPath, cfg.theme))
+	fmt.Printf("Theme: %s\n", themeDir)
+
 	templateCache, err := LoadTemplatesAsMap(
 		themeDir,
 		"templates/pages/*.html",

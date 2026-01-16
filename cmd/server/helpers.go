@@ -50,11 +50,14 @@ func slugify(s string) string {
 	if dot := strings.LastIndex(s, "."); dot != -1 {
 		s = s[:dot]
 	}
-	s = strings.ToLower(s)
-	s = strings.ReplaceAll(s, " ", "-")
-	s = strings.ReplaceAll(s, "_", "-")
-	re := regexp.MustCompile(`[^a-z0-9\-]+`)
+	s = strings.ToLower(s)                   // lower
+	s = strings.ReplaceAll(s, " ", "-")      // replace spaces with dash
+	s = strings.ReplaceAll(s, "_", "-")      // underscores with -
+	re := regexp.MustCompile(`[^a-z0-9\-]+`) // replace lower case, digits, hypens
 	s = re.ReplaceAllString(s, "")
+	// Collapse multiple consecutive dashes into single dash
+	reDash := regexp.MustCompile(`-+`)
+	s = reDash.ReplaceAllString(s, "-")
 	s = strings.Trim(s, "-")
 	return s
 }

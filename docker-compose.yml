@@ -8,4 +8,3 @@ services:
     volumes:
       - ./content:/app/content:ro
     command:
-      - "-theme=darkblue"

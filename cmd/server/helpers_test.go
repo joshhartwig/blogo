@@ -26,3 +26,27 @@ func TestCalculateDuration(t *testing.T) {
 		})
 	}
 }
+
+func TestSlugify(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"Hello World.md", "hello-world"},
+		{"My_post_title.md", "my-post-title"},
+		{"  Spaces  and___underscores.md", "spaces-and-underscores"},
+		{"Special!@#Characters.md", "specialcharacters"},
+		{"MixedCASE123.md", "mixedcase123"},
+		{"trailing-.md", "trailing"},
+		{"--double--dash--.md", "double-dash"},
+		{"file with spaces.md", "file-with-spaces"},
+		{"file_name_with_underscores.md", "file-name-with-underscores"},
+	}
+
+	for _, tt := range tests {
+		got := slugify(tt.input)
+		if got != tt.expected {
+			t.Errorf("slugify(%q) got %q; want %q", tt.input, got, tt.expected)
+		}
+	}
+}
