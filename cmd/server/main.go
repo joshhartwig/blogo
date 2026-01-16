@@ -52,7 +52,7 @@ func main() {
 	fmt.Printf("\nStarting Server...\n")
 
 	themeDir := os.DirFS(filepath.Join(cfg.themesPath, cfg.theme))
-	fmt.Printf("Theme: %s\n", themeDir)
+	fmt.Printf("Blog Theme: %s\n", themeDir)
 
 	templateCache, err := LoadTemplatesAsMap(
 		themeDir,
@@ -73,9 +73,10 @@ func main() {
 	}
 
 	// add all posts to the post list
+	fmt.Printf("Found Following MarkDown Posts\n")
 	allPosts := []models.Post{}
 	for _, p := range markdown {
-		fmt.Printf("found post - %s\n", p.Metadata.Title)
+		fmt.Printf("Title: %s Slug: %s\n", p.Metadata.Title, p.Metadata.Slug)
 		allPosts = append(allPosts, p)
 	}
 	fmt.Printf("\ntotal post count: %d\n", len(allPosts))
