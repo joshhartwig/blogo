@@ -2,22 +2,24 @@
 
 {{define "main"}}
   <header class="blog-header">
-    <h1>Josh builds stuff</h1>
+    <h1>Josh <span class="strikethrough">breaks</span> builds stuff</h1>
     <p class="subtitle">
-      A place to keep track of the all the various projects and tech that interests me.
+      Welcome to my blog. Here you will find all things that interest me that I thought were worth writing about.
+      If you found any of it interesting, drop me a line and let me know. Thanks for stopping by!
     </p>
   </header>
 
   <section class="posts-list" aria-label="Blog posts">
-    {{range .Posts}}
-      <article class="post-item"> 
-        <h2 class="post-title">
-          <a href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a>
-        </h2>
+    <h3>Writing</h3>
+    <ul>
+      {{range .Posts}}
+      <li>
         <time class="post-date" datetime="{{.Metadata.Date.Format "2006-01-02"}}">
-          {{.Metadata.Date.Format "January 2, 2006"}}
+          {{.Metadata.Date.Format "Jan 2, 2006"}}
         </time>
-      </article>
-    {{end}}
+        <a href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a>
+      </li>
+      {{end}}
+    </ul>
   </section>
 {{end}}
