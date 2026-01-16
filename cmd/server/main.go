@@ -4,9 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"html/template"
+	"io/fs"
 	"log"
-	"path/filepath"
-
 	"log/slog"
 	"net/http"
 	"os"
@@ -14,14 +13,13 @@ import (
 
 	"github.com/joshhartwig/blogo/internal/models"
 	"github.com/joshhartwig/blogo/internal/posts"
+	"github.com/joshhartwig/blogo/ui"
 )
 
 type config struct {
 	port        int
 	env         string
 	contentPath string
-	theme       string
-	themesPath  string
 }
 
 type application struct {
@@ -40,8 +38,6 @@ func main() {
 	flag.IntVar(&cfg.port, "port", 3999, "Server Port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|production)")
 	flag.StringVar(&cfg.contentPath, "content", "./content/", "Path to the directory containing markdown content files (e.g., ./content/)")
-	flag.StringVar(&cfg.themesPath, "theme path", "themes", "Path to the directory containing all theme folders (e.g., themes)")
-	flag.StringVar(&cfg.theme, "theme", "default", "Name of the theme folder to use (e.g., default, darkblue). Should match a folder under the themes path.")
 
 	postsPerPage := flag.Int("PostsPerPage", 5, "sets the default count of posts per page")
 
@@ -51,14 +47,16 @@ func main() {
 
 	fmt.Printf("\nStarting Server...\n")
 
-	themeDir := os.DirFS(filepath.Join(cfg.themesPath, cfg.theme))
-	fmt.Printf("Blog Theme: %s\n", themeDir)
+	templateFS, err := fs.Sub(ui.Files, "templates")
+	if err != nil {
+		log.Fatalf("failed to get embedded templates: %v", err)
+	}
 
 	templateCache, err := LoadTemplatesAsMap(
-		themeDir,
-		"templates/pages/*.html",
-		"templates/partials/*.html",
-		"templates/base.html",
+		templateFS,
+		"pages/*.html",
+		"partials/*.html",
+		"base.html",
 	)
 
 	if err != nil {

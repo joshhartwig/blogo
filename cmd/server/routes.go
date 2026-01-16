@@ -1,17 +1,22 @@
 package main
 
 import (
+	"io/fs"
 	"net/http"
-	"path/filepath"
+
+	"github.com/joshhartwig/blogo/ui"
+	_ "github.com/joshhartwig/blogo/ui"
 )
 
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
+	staticFS, _ := fs.Sub(ui.Files, "static")
+
 	// file server
 	mux.Handle("GET /static/",
 		http.StripPrefix("/static",
-			http.FileServer(http.Dir(filepath.Join(app.cfg.themesPath, app.cfg.theme, "static")))))
+			http.FileServer(http.FS(staticFS))))
 
 	// html routes - using security and common headers
 	htmlHandler := func(name string, h http.HandlerFunc) http.Handler {

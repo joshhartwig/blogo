@@ -18,7 +18,6 @@ import (
 // The resulting *template.Template for each page is stored in a map, keyed by the page's filename.
 // Returns the cache map and any error encountered during parsing.
 func LoadTemplatesAsMap(fileSys fs.FS, pagesGlobPath, partialsGlobPath, basePath string) (map[string]*template.Template, error) {
-	//"./ui/templates/partials/*.html"
 	cache := map[string]*template.Template{}
 
 	// get all the pages from the pages path

@@ -19,8 +19,7 @@ WORKDIR /app
 
 COPY --from=build /out/blogo /app/blogo
 
-# Bake themes into the image (recommended)
-COPY themes /app/themes
+# No need to copy ui/static or ui/templates, as they are embedded in the binary
 
 # Optional: bake default content too (handy for first run)
 COPY content /app/content

@@ -7,4 +7,3 @@ services:
       - "3999:3999"
     volumes:
       - ./content:/app/content:ro
-    command:
