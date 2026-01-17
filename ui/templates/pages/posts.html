@@ -20,21 +20,4 @@
   {{else}}
     <h2>No posts found</h2>
   {{end}}
-  
-  <!-- Pagination -->
-  {{if gt .Pagination.PageCount 1}}
-    <nav class="pagination">
-      {{if .Pagination.HasPrev}}
-        <a href="/posts?page={{.Pagination.PrevPage}}" class="pagination-link prev">← Previous</a>
-      {{end}}
-      
-      <span class="pagination-info">
-        Page {{.Pagination.CurrentPage}} of {{.Pagination.PageCount}}
-      </span>
-
-      {{if .Pagination.HasNext}}
-        <a href="/posts?page={{.Pagination.NextPage}}" class="pagination-link prev">Next →</a>
-      {{end}}
-    </nav>
-    {{end}}
 {{end}}
