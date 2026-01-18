@@ -1,0 +1,33 @@
+# .dockerignore
+
+# Binaries
+/out/
+tmp/
+main
+
+# VCS
+.git
+.gitignore
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test and coverage files
+*.test
+*.log
+*.coverprofile
+
+# Air/dev files
+.air.toml
+
+# Local content (optional, if you only want to use baked-in content)
+# content/
+
+# Docker files
+docker-compose.yml
+Dockerfile
