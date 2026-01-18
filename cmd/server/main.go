@@ -13,6 +13,7 @@ import (
 
 	"github.com/joshhartwig/blogo/internal/models"
 	"github.com/joshhartwig/blogo/internal/posts"
+	"github.com/joshhartwig/blogo/logger"
 	"github.com/joshhartwig/blogo/ui"
 )
 
@@ -42,8 +43,7 @@ func main() {
 	postsPerPage := flag.Int("PostsPerPage", 5, "sets the default count of posts per page")
 
 	flag.Parse()
-
-	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{AddSource: false}))
+	logger := logger.New()
 
 	fmt.Printf("\nStarting Server...\n")
 

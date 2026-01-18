@@ -13,5 +13,6 @@ require (
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
+	github.com/lmittmann/tint v1.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
