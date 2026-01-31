@@ -13,10 +13,15 @@ func (app *application) routes() http.Handler {
 
 	staticFS, _ := fs.Sub(ui.Files, "static")
 
-	// file server
+	// file server for UI static assets
 	mux.Handle("GET /static/",
 		http.StripPrefix("/static",
 			http.FileServer(http.FS(staticFS))))
+
+	// file server for content assets (images in post directories)
+	mux.Handle("GET /content/",
+		http.StripPrefix("/content",
+			http.FileServer(http.Dir(app.contentPath))))
 
 	// html routes - using security and common headers
 	htmlHandler := func(name string, h http.HandlerFunc) http.Handler {

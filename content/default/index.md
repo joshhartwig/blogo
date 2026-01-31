@@ -15,3 +15,5 @@ If you can see this, your blog is working!
 
 - You can edit or delete this file at any time.
 - Try adding more posts to see them appear on your homepage.
+
+![Flower](/content/default/flower.png)

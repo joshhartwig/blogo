@@ -63,27 +63,48 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 func readMarkdownReturnPostsInOrder(fileSystem fs.FS) ([]models.Post, error) {
 	var posts []models.Post
 
-	files, err := fs.Glob(fileSystem, "*.md")
+	// First, look for folder-based posts (*/index.md)
+	folderFiles, err := fs.Glob(fileSystem, "*/index.md")
 	if err != nil {
 		return nil, err
 	}
 
-	if len(files) == 0 {
-		return nil, fmt.Errorf("no matching files")
-	}
-
-	for _, path := range files {
+	for _, path := range folderFiles {
 		data, err := fs.ReadFile(fileSystem, path)
 		if err != nil {
 			return nil, err
 		}
 
-		slug := slugify(filepath.Base(path) + ".md")   // get the title name for the map
-		post, err := convertMarkdownToHtml(slug, data) // convert the markdown file into a post struct
+		slug := slugify(filepath.Dir(path))
+		post, err := convertMarkdownToHtml(slug, data)
 		if err != nil {
 			return nil, err
 		}
 		posts = append(posts, post)
+	}
+
+	// Also check for flat .md files (backwards compatibility)
+	flatFiles, err := fs.Glob(fileSystem, "*.md")
+	if err != nil {
+		return nil, err
+	}
+
+	for _, path := range flatFiles {
+		data, err := fs.ReadFile(fileSystem, path)
+		if err != nil {
+			return nil, err
+		}
+
+		slug := slugify(filepath.Base(path))
+		post, err := convertMarkdownToHtml(slug, data)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, post)
+	}
+
+	if len(posts) == 0 {
+		return nil, fmt.Errorf("no matching files")
 	}
 
 	slices.SortFunc(posts, func(a, b models.Post) int {
@@ -94,36 +115,62 @@ func readMarkdownReturnPostsInOrder(fileSystem fs.FS) ([]models.Post, error) {
 }
 
 // readMarkdownContent reads the local content directory for .md files, converts them to a Post struct and
-// adds them to a template cache
+// adds them to a template cache. It supports both folder-based posts (post-name/index.md) and
+// flat .md files for backwards compatibility.
 func readMarkdownContent(fileSystem fs.FS) (map[string]models.Post, error) {
 	posts := make(map[string]models.Post)
 
-	files, err := fs.Glob(fileSystem, "*.md") // fetch all .md files in the content dir
+	// First, look for folder-based posts (*/index.md)
+	folderFiles, err := fs.Glob(fileSystem, "*/index.md")
 	if err != nil {
 		return nil, err
 	}
 
-	if len(files) == 0 {
-		return nil, fmt.Errorf("no matching files")
-	}
-
-	for _, path := range files {
+	for _, path := range folderFiles {
 		data, err := fs.ReadFile(fileSystem, path)
 		if err != nil {
 			return nil, err
 		}
 
-		slug := slugify(filepath.Base(path)) // get the title name for the map
+		// For folder-based posts, use the folder name as the slug
+		slug := slugify(filepath.Dir(path))
 
-		post, err := convertMarkdownToHtml(slug, data) // convert the markdown file into a post struct
+		post, err := convertMarkdownToHtml(slug, data)
 		if err != nil {
 			return nil, err
 		}
 		if post.Metadata.Draft {
-			// skip draft posts
 			continue
 		}
-		posts[slug] = post // add markdown to cache
+		posts[slug] = post
+	}
+
+	// Also check for flat .md files (backwards compatibility)
+	flatFiles, err := fs.Glob(fileSystem, "*.md")
+	if err != nil {
+		return nil, err
+	}
+
+	for _, path := range flatFiles {
+		data, err := fs.ReadFile(fileSystem, path)
+		if err != nil {
+			return nil, err
+		}
+
+		slug := slugify(filepath.Base(path))
+
+		post, err := convertMarkdownToHtml(slug, data)
+		if err != nil {
+			return nil, err
+		}
+		if post.Metadata.Draft {
+			continue
+		}
+		posts[slug] = post
+	}
+
+	if len(posts) == 0 {
+		return nil, fmt.Errorf("no matching files")
 	}
 
 	return posts, nil
