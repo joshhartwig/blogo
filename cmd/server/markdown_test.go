@@ -162,5 +162,46 @@ func TestReadInvalidFrontMatter(t *testing.T) {
 			t.Errorf("error wanted a title of %s but got %s", wantMetaTitle, post.Metadata.Title)
 		}
 	}
+}
 
+func TestReadMarkdownContentInFolders(t *testing.T) {
+	testFs := fstest.MapFS{
+		"default/index.md":        {Data: []byte(testMarkDownOne)},
+		"another-test/index.md":   {Data: []byte(testMarkDownTwo)},
+		"no-frontmatter/index.md": {Data: []byte(testFrontMatterThree)},
+		"draft-folder/index.md":   {Data: []byte(testFrontMatterFour)},
+		"not-markdown.txt":        {Data: []byte("not markdown")},
+	}
+
+	md, err := readMarkdownContent(testFs)
+	if err != nil {
+		t.Errorf("should not have errored reading folders %v", err.Error())
+	}
+
+	if len(md) == 0 {
+		t.Errorf("the markdown content cache is 0, %d", len(md))
+	}
+
+	// Check that correct slugs exist
+	expectedSlugs := []string{"default", "another-test", "no-frontmatter"}
+	for _, slug := range expectedSlugs {
+		if _, ok := md[slug]; !ok {
+			t.Errorf("expected slug %s in markdown cache", slug)
+		}
+	}
+
+	// Ensure draft and non-markdown files are not included
+	if _, ok := md["draft-folder"]; ok {
+		t.Errorf("draft posts should not be included in markdown cache")
+	}
+	if _, ok := md["not-markdown"]; ok {
+		t.Errorf("non-markdown files should not be included in markdown cache")
+	}
+
+	// Check content for a folder with no frontmatter
+	if post, ok := md["no-frontmatter"]; ok {
+		if !strings.Contains(string(post.Content), "<h1>Test3</h1>") {
+			t.Errorf("expected <h1>Test3</h1> in no-frontmatter content, got %s", post.Content)
+		}
+	}
 }
