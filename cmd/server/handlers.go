@@ -73,7 +73,7 @@ func (app *application) showPostHandler(w http.ResponseWriter, r *http.Request) 
 
 	if slug == "" || len(slug) > 200 {
 		app.logger.Warn("path not found", "info", slug, "handler", "post")
-		http.Redirect(w, r, "/notfound ", http.StatusSeeOther)
+		http.Redirect(w, r, "/notfound", http.StatusSeeOther)
 		return
 	}
 

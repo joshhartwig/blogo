@@ -15,6 +15,7 @@ func (app *application) render(w http.ResponseWriter, status int, templateName s
 	if !ok {
 		err := fmt.Errorf("template not found: %s", templateName)
 		app.logger.Error(err.Error())
+		return
 	}
 
 	buf := new(bytes.Buffer)
