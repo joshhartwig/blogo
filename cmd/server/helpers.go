@@ -23,6 +23,8 @@ func (app *application) render(w http.ResponseWriter, status int, templateName s
 	err := v.ExecuteTemplate(buf, "base", data)
 	if err != nil {
 		app.logger.Error("template execution failed", "error", err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(status)
