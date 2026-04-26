@@ -12,6 +12,10 @@ import (
 	"github.com/joshhartwig/blogo/internal/models"
 )
 
+var (
+	slugRegex = regexp.MustCompile(`^[a-z0-9-]+$`)
+)
+
 // ping is used for testing endpoints to ensure handlers are working
 func ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("pong"))
@@ -181,6 +185,5 @@ func (app *application) searchHandler(w http.ResponseWriter, r *http.Request) {
 
 // isValidSlug reports whether slug is a non-empty, ASCII-only slug suitable for URLs
 func isValidSlug(slug string) bool {
-	matched, _ := regexp.MatchString(`^[a-z0-9-]+$`, slug)
-	return matched
+	return slugRegex.MatchString(slug)
 }
