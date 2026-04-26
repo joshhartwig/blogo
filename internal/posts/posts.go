@@ -79,34 +79,55 @@ func (p *PostRepository) SearchPosts(term string) []models.Post {
 	// remove any spacing and lower case everything
 	term = strings.TrimSpace(strings.ToLower(term))
 
+	// create a map to hold posts that match
+	temp := make(map[string]models.Post)
+
 	for _, v := range p.Posts {
+		// search content for term
 		if strings.Contains(strings.ToLower(string(v.Content)), term) {
-			results = append(results, v)
+			//results = append(results, v)
+			temp[v.Metadata.Slug] = v
 			continue
 		}
 
+		// search slug for term
 		if strings.Contains(strings.ToLower(string(v.Metadata.Slug)), term) {
-			results = append(results, v)
+			//results = append(results, v)
+			temp[v.Metadata.Slug] = v
 			continue
 		}
 
+		// search summary for term
 		if strings.Contains(strings.ToLower(string(v.Metadata.Summary)), term) {
-			results = append(results, v)
+			//results = append(results, v)
+			temp[v.Metadata.Slug] = v
 			continue
 		}
 
+		// search title for term
 		if strings.Contains(strings.ToLower(string(v.Metadata.Title)), term) {
-			results = append(results, v)
+			//results = append(results, v)
+			temp[v.Metadata.Slug] = v
 			continue
 		}
 
+		// search tags
 		for _, y := range v.Metadata.Tags {
 			if strings.Contains(strings.ToLower(string(y)), term) {
-				results = append(results, v)
+				//results = append(results, v)
+				temp[v.Metadata.Slug] = v
 				continue
 			}
 		}
 	}
+
+	// take from map and add to results
+	for _, p := range temp {
+		results = append(results, p)
+	}
+
+	// sort posts by date
+	slices.SortFunc(results, sortPostsByDate)
 
 	return results
 }

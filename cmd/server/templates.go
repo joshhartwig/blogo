@@ -61,50 +61,6 @@ func LoadTemplatesAsMap(fileSys fs.FS, pagesGlobPath, partialsGlobPath, basePath
 	return cache, nil
 }
 
-func LoadAllTemplates(fileSys fs.FS, pagesGlobPath, partialsGlobPath, basePath string) ([]*template.Template, error) {
-	var templates []*template.Template
-
-	// get all the pages from the pages path
-	pages, err := fs.Glob(fileSys, pagesGlobPath)
-	if err != nil {
-		return nil, err
-	}
-
-	// iterate through each page
-	for _, page := range pages {
-		fileName := filepath.Base(page) // strip the name from the filepath ex home.html
-		names := strings.Split(fileName, ".")
-		name := names[0]
-
-		if len(name) == 0 {
-			return nil, errors.New("the page file name does not contain a . when trying to split")
-		}
-
-		// parse the base template
-		ts, err := template.New(name).Funcs(functions).ParseFS(fileSys, basePath)
-		if err != nil {
-			return nil, err
-		}
-
-		// parse the partials
-		ts, err = ts.ParseFS(fileSys, partialsGlobPath)
-		if err != nil {
-			return nil, err
-		}
-
-		// parse the page using the provided filesystem so relative paths resolve
-		ts, err = ts.ParseFS(fileSys, page)
-		if err != nil {
-			return nil, err
-		}
-
-		templates = append(templates, ts)
-	}
-
-	return templates, nil
-
-}
-
 // return a nice formatted date string
 func humanDate(t time.Time) string {
 
