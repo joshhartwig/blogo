@@ -137,10 +137,12 @@ func (app *application) rssHandler(w http.ResponseWriter, r *http.Request) {
 	data, err := xml.Marshal(feedData)
 	if err != nil {
 		app.logger.Error(err.Error(), "error marshaling feed data to xml", "rssHanlder")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Add("Content-Type", "application/xml")
+	w.Write([]byte(xml.Header)) // fix missing header
 	w.Write(data)
 }
 
