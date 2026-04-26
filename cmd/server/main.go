@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"html/template"
 	"io/fs"
-	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -45,11 +44,12 @@ func main() {
 	flag.Parse()
 	logger := logger.New()
 
-	fmt.Printf("\nStarting Server...\n")
+	logger.Info("starting server")
 
 	templateFS, err := fs.Sub(ui.Files, "templates")
 	if err != nil {
-		log.Fatalf("failed to get embedded templates: %v", err)
+		logger.Error("failed to get embedded templates", "error", err)
+		os.Exit(1)
 	}
 
 	templateCache, err := LoadTemplatesAsMap(
@@ -60,24 +60,24 @@ func main() {
 	)
 
 	if err != nil {
-		fmt.Println("Unable to create template cache, exiting to OS", err)
+		logger.Error("unable to create template cache", "error", err)
 		os.Exit(1)
 	}
 
 	// fetch posts from content folder
 	markdown, err := readMarkdownContent(os.DirFS(cfg.contentPath))
 	if err != nil {
-		fmt.Println("Error reading markdown content: ", err)
+		logger.Error("error reading markdown content", "error", err)
 	}
 
 	// add all posts to the post list
-	fmt.Printf("Found Following MarkDown Posts\n")
+	logger.Info("loading markdown posts")
 	allPosts := []models.Post{}
 	for _, p := range markdown {
-		fmt.Printf("Title: %s Slug: %s\n", p.Metadata.Title, p.Metadata.Slug)
+		logger.Info("loaded post", "title", p.Metadata.Title, "slug", p.Metadata.Slug)
 		allPosts = append(allPosts, p)
 	}
-	fmt.Printf("\ntotal post count: %d\n", len(allPosts))
+	logger.Info("post loading complete", "count", len(allPosts))
 
 	app := application{
 		templateCache: templateCache,
@@ -98,6 +98,7 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	fmt.Printf("\nWeb Server running on port :%d\n", cfg.port)
-	log.Fatal(srv.ListenAndServe())
+	logger.Info("web server started", "port", cfg.port)
+	logger.Error("server error", "error", srv.ListenAndServe())
+	os.Exit(1)
 }
