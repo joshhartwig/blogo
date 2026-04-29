@@ -10,9 +10,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/joshhartwig/blogo/internal/logger"
 	"github.com/joshhartwig/blogo/internal/models"
 	"github.com/joshhartwig/blogo/internal/posts"
-	"github.com/joshhartwig/blogo/logger"
 	"github.com/joshhartwig/blogo/ui"
 )
 
