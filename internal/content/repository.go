@@ -28,5 +28,5 @@ func NewFilePostRepository(fileSys fs.FS) (*FilePostRepository, error) {
 }
 
 func (r *FilePostRepository) All() ([]Post, error) {
-
+	//TODO: finish functions
 }
