@@ -1,9 +1,9 @@
 package server
 
 import (
+	"fmt"
 	"html/template"
 	"io/fs"
-	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -25,24 +25,28 @@ type Server struct {
 	logger        *slog.Logger
 }
 
-func New(siteConfig config.SiteConfig) *Server {
+func New(cfg config.SiteConfig, logger *slog.Logger) (*Server, error) {
 	templateCache, err := newTemplateCache()
 	if err != nil {
-		log.Fatalf("error building template cache: %v", err)
+		return nil, fmt.Errorf("error creating new template cache: %v", err)
 	}
 
-	markdownCache := markdown.NewCache(os.DirFS(siteConfig.ContentDir))
+	markdownCache := markdown.NewCache(os.DirFS(cfg.ContentDir))
+
+	postRepo, err := content.NewFilePostRepository(cfg.ContentDir, markdownCache)
 
 	s := &Server{
-		cfg:           siteConfig,
+		cfg:           cfg,
 		mux:           http.NewServeMux(),
 		markdownCache: markdownCache,
 		templateCache: templateCache,
+		postRepo:      postRepo,
+		logger:        logger,
 	}
 
 	s.Routes()
 
-	return s
+	return s, nil
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
@@ -57,4 +61,8 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		"base.html",
 	)
 
+}
+
+func (s *Server) ListenAndServe(addr string) error {
+	return http.ListenAndServe(addr, s.mux)
 }

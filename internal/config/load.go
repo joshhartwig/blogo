@@ -14,6 +14,7 @@ func Load(path string) (SiteConfig, error) {
 	var sc SiteConfig
 
 	if path == "" {
+		// load the embedded file if we cannot find in the passed in config
 		return loadDefault()
 	}
 
@@ -27,21 +28,6 @@ func Load(path string) (SiteConfig, error) {
 		return sc, err
 	}
 	return sc, nil
-}
-
-func LoadWithDefaults(path string) (SiteConfig, error) {
-	cfg, err := loadDefault()
-	if err != nil {
-		return SiteConfig{}, err
-	}
-	if path == "" {
-		return cfg, nil
-	}
-	userCfg, err := Load(path)
-	if err != nil {
-		return SiteConfig{}, err
-	}
-	return Merge(cfg, userCfg), nil
 }
 
 func Merge(def, user SiteConfig) SiteConfig {
