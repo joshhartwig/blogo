@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -11,22 +12,18 @@ import (
 )
 
 func main() {
-
 	switch os.Args[1] {
 	case "serve":
 		runServe(os.Args[2:])
 	default:
 		log.Fatal("unknown command exiting")
 	}
-
 }
 
 func runServe(args []string) {
 	fs := flag.NewFlagSet("serve", flag.ExitOnError)
-
 	configPath := fs.String("config", "", "path to config")
 	addr := fs.String("addr", ":8080", "server address")
-
 	fs.Parse(args)
 
 	logger := logger.New()
@@ -41,5 +38,6 @@ func runServe(args []string) {
 		log.Fatalf("error creating new server: %v", err)
 	}
 
+	fmt.Printf("starting blogo server at %v\n", *addr)
 	log.Fatal(srv.ListenAndServe(*addr))
 }

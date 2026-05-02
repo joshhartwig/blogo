@@ -1,0 +1,9 @@
+site_title = "A Web Site"
+base_url = "http://localhost"
+theme = "default"
+posts_per_page = 5
+content_dir = "./content"
+
+[author]
+name = "Default Bob"
+bio = "A guy from defaultland."

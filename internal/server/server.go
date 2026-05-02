@@ -33,14 +33,18 @@ func New(cfg config.SiteConfig, logger *slog.Logger) (*Server, error) {
 
 	markdownCache := markdown.NewCache(os.DirFS(cfg.ContentDir))
 
-	postRepo, err := content.NewFilePostRepository(cfg.ContentDir, markdownCache)
+	// load all posts
+	var blogPosts []models.Post
+	for _, p := range markdownCache {
+		blogPosts = append(blogPosts, p)
+	}
 
 	s := &Server{
 		cfg:           cfg,
 		mux:           http.NewServeMux(),
 		markdownCache: markdownCache,
 		templateCache: templateCache,
-		postRepo:      postRepo,
+		postRepo:      posts.NewPostRepository(blogPosts),
 		logger:        logger,
 	}
 
