@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/joshhartwig/blogo/internal/config"
 	"github.com/joshhartwig/blogo/internal/posts"
@@ -25,7 +26,7 @@ type Server struct {
 func New(cfg config.SiteConfig, logger *slog.Logger) (*Server, error) {
 	templateCache, err := newTemplateCache()
 	if err != nil {
-		return nil, fmt.Errorf("error creating new template cache: %v", err)
+		return nil, fmt.Errorf("error creating new template cache: %w", err)
 	}
 
 	s := &Server{
@@ -55,5 +56,11 @@ func newTemplateCache() (map[string]*template.Template, error) {
 }
 
 func (s *Server) ListenAndServe(addr string) error {
-	return http.ListenAndServe(addr, s.mux)
+	server := &http.Server{
+		Addr:              addr,
+		Handler:           s.mux,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+
+	return server.ListenAndServe()
 }

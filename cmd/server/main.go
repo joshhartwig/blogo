@@ -12,6 +12,11 @@ import (
 )
 
 func main() {
+	if len(os.Args) < 2 {
+		fmt.Fprintln(os.Stderr, "usage: blogo <command> [options] (example: blogo serve --config ./config.toml --addr :4000)")
+		os.Exit(2)
+	}
+
 	switch os.Args[1] {
 	case "serve":
 		runServe(os.Args[2:])
