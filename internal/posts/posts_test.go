@@ -66,7 +66,10 @@ func TestSearchPosts(t *testing.T) {
 
 func TestNewPostRepository(t *testing.T) {
 	testFS := createTestFS()
-	repo := NewPostRepository(testFS)
+	repo, err := NewPostRepository(testFS)
+	if err != nil {
+		t.Errorf("error creating new post repository: %v", err)
+	}
 
 	if len(repo.Posts) != len(testFS) {
 		t.Errorf("post repo contents should be %d but got %d", len(testFS), len(repo.Posts))

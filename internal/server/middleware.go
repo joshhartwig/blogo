@@ -1,17 +1,8 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 )
-
-// middleware outputs the method and uri the request is hitting on the server
-func (s *Server) logRequests(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("-> %s | %s \n", r.Method, r.URL)
-		next.ServeHTTP(w, r)
-	})
-}
 
 func (s *Server) setCommon(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

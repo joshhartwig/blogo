@@ -63,19 +63,19 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 // readMarkdownContent reads the local content directory for .md files, converts them to a Post struct and
 // adds them to a template cache. It supports both folder-based posts (post-name/index.md) and
 // flat .md files for backwards compatibility.
-func GetMarkdownFromFS(fileSystem fs.FS) []models.Post {
+func GetMarkdownFromFS(fileSystem fs.FS) ([]models.Post, error) {
 	posts := []models.Post{}
 
 	filenames, err := fs.Glob(fileSystem, "*/index.md")
 	if err != nil {
-		return posts
+		return posts, err
 	}
 
 	// iterate through each filename and read the file
 	for _, path := range filenames {
 		data, err := fs.ReadFile(fileSystem, path)
 		if err != nil {
-			return posts
+			return posts, err
 		}
 
 		// For folder-based posts, use the folder name as the slug
@@ -83,7 +83,7 @@ func GetMarkdownFromFS(fileSystem fs.FS) []models.Post {
 
 		post, err := convertMarkdownToHtml(slug, data)
 		if err != nil {
-			return posts
+			return posts, err
 		}
 		if post.Metadata.Draft {
 			continue
@@ -96,20 +96,20 @@ func GetMarkdownFromFS(fileSystem fs.FS) []models.Post {
 	// Also check for flat .md files (backwards compatibility)
 	flatFiles, err := fs.Glob(fileSystem, "*.md")
 	if err != nil {
-		return posts
+		return posts, err
 	}
 
 	for _, path := range flatFiles {
 		data, err := fs.ReadFile(fileSystem, path)
 		if err != nil {
-			return posts
+			return posts, err
 		}
 
 		slug := slugify(filepath.Base(path))
 
 		post, err := convertMarkdownToHtml(slug, data)
 		if err != nil {
-			return posts
+			return posts, err
 		}
 		if post.Metadata.Draft {
 			continue
@@ -120,10 +120,10 @@ func GetMarkdownFromFS(fileSystem fs.FS) []models.Post {
 	}
 
 	if len(posts) == 0 {
-		return posts
+		return posts, err
 	}
 
-	return posts
+	return posts, nil
 }
 
 // calculateDuration estimates the reading duration in minutes for the given content string.

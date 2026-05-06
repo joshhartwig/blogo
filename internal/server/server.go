@@ -29,11 +29,16 @@ func New(cfg config.SiteConfig, logger *slog.Logger) (*Server, error) {
 		return nil, fmt.Errorf("error creating new template cache: %w", err)
 	}
 
+	postRepo, err := posts.NewPostRepository(os.DirFS(cfg.ContentDir))
+	if err != nil {
+		return &Server{}, err
+	}
+
 	s := &Server{
 		cfg:           cfg,
 		mux:           http.NewServeMux(),
 		templateCache: templateCache,
-		postRepo:      posts.NewPostRepository(os.DirFS(cfg.ContentDir)),
+		postRepo:      postRepo,
 		logger:        logger,
 	}
 

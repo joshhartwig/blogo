@@ -197,7 +197,10 @@ summary: Draft
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			posts := GetMarkdownFromFS(tt.fileSystem)
+			posts, err := GetMarkdownFromFS(tt.fileSystem)
+			if err != nil {
+				t.Errorf("error fetching markdown from filesystem: %v", err)
+			}
 			if len(posts) != tt.expectedCount {
 				t.Errorf("expected %d posts, got %d", tt.expectedCount, len(posts))
 			}
@@ -305,26 +308,6 @@ func TestSlugify(t *testing.T) {
 		})
 	}
 }
-
-var (
-	// Helper function to reduce duplication in tests
-	createTestPost = func(title, slug string, draft bool) []byte {
-		return []byte(`---
-title: ` + title + `
-date: 2024-01-15
-draft: ` + (func() string {
-			if draft {
-				return "true"
-			}
-			return "false"
-		})() + `
-summary: Test summary
----
-
-# Test Content
-This is test content.`)
-	}
-)
 
 // Compile test to ensure types match
 func TestPostStructure(t *testing.T) {
