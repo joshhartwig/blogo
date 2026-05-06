@@ -11,12 +11,18 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/joshhartwig/blogo/internal/config"
 	"github.com/joshhartwig/blogo/internal/models"
 )
 
 var (
 	slugRegex = regexp.MustCompile(`^[a-z0-9-]+$`)
 )
+
+type PageData struct {
+	Site config.SiteConfig
+	Page any
+}
 
 // ping is used for testing endpoints to ensure handlers are working
 func ping(w http.ResponseWriter, r *http.Request) {
@@ -199,15 +205,20 @@ func (s *Server) render(w http.ResponseWriter, status int, templateName string, 
 		return
 	}
 
-	buf := new(bytes.Buffer)
+	pageData := PageData{
+		Site: s.cfg,
+		Page: data,
+	}
 
-	err := v.ExecuteTemplate(buf, "base", data)
+	buf := new(bytes.Buffer)
+	err := v.ExecuteTemplate(buf, "base", pageData)
 	if err != nil {
 		s.logger.Error("template execution failed", "error", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(status)
 
 	// write contents of buffer to response writer
