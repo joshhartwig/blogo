@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"html/template"
 	"io/fs"
-	"math"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -16,10 +15,6 @@ import (
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/parser"
 	"go.abhg.dev/goldmark/frontmatter"
-)
-
-var (
-	slugRegex = regexp.MustCompile(`^[a-z0-9-]+$`)
 )
 
 // convertMarkdownToHtml takes the markdown data in bytes and converts it to html
@@ -68,16 +63,16 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 // readMarkdownContent reads the local content directory for .md files, converts them to a Post struct and
 // adds them to a template cache. It supports both folder-based posts (post-name/index.md) and
 // flat .md files for backwards compatibility.
-func NewCache(fileSystem fs.FS) map[string]models.Post {
-	posts := make(map[string]models.Post)
+func GetMarkdownFromFS(fileSystem fs.FS) []models.Post {
+	posts := []models.Post{}
 
-	// First, look for folder-based posts (*/index.md)
-	folderFiles, err := fs.Glob(fileSystem, "*/index.md")
+	filenames, err := fs.Glob(fileSystem, "*/index.md")
 	if err != nil {
 		return posts
 	}
 
-	for _, path := range folderFiles {
+	// iterate through each filename and read the file
+	for _, path := range filenames {
 		data, err := fs.ReadFile(fileSystem, path)
 		if err != nil {
 			return posts
@@ -93,7 +88,9 @@ func NewCache(fileSystem fs.FS) map[string]models.Post {
 		if post.Metadata.Draft {
 			continue
 		}
-		posts[slug] = post
+
+		post.Metadata.Slug = slug
+		posts = append(posts, post)
 	}
 
 	// Also check for flat .md files (backwards compatibility)
@@ -117,7 +114,9 @@ func NewCache(fileSystem fs.FS) map[string]models.Post {
 		if post.Metadata.Draft {
 			continue
 		}
-		posts[slug] = post
+
+		post.Metadata.Slug = slug
+		posts = append(posts, post)
 	}
 
 	if len(posts) == 0 {
@@ -131,14 +130,12 @@ func NewCache(fileSystem fs.FS) map[string]models.Post {
 // It assumes an average reading speed of 200 words per minute.
 func calculateDuration(content string) int {
 	const wordsPerMinute = 200
-
 	words := strings.Fields(content)
 	if len(words) == 0 {
 		return 1
 	}
-
-	duration := float64(len(words)) / float64(wordsPerMinute)
-	return int(math.Round(duration) + 1)
+	duration := (len(words) / wordsPerMinute) + 1
+	return duration
 }
 
 // slugify generates a URL-friendly slug from a string

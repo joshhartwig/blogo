@@ -88,8 +88,8 @@ func (s *Server) showPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	post, ok := s.markdownCache[slug]
-	if !ok {
+	post, err := s.postRepo.GetPostBySlug(slug)
+	if err != nil {
 		http.Redirect(w, r, "/notfound", http.StatusSeeOther)
 		return
 	}
@@ -118,16 +118,16 @@ func (s *Server) projectsHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) rssHandler(w http.ResponseWriter, r *http.Request) {
 	items := []models.Item{}
 	feedData := models.RSS{
-		Title:       "Josh's Blog",
+		Title:       s.cfg.SiteTitle,
 		Link:        "https://localhost:3999",
-		Description: "description",
+		Description: s.cfg.Description,
 		Language:    "English",
 		PubDate:     time.Now(),
 		Category:    "blog",
 		Item:        items,
 	}
 
-	for _, post := range s.markdownCache {
+	for _, post := range s.postRepo.Posts {
 		item := models.Item{
 			Title:       post.Metadata.Title,
 			Link:        post.Metadata.Slug,

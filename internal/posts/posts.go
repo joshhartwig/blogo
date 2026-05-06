@@ -1,9 +1,12 @@
 package posts
 
 import (
+	"errors"
+	"io/fs"
 	"slices"
 	"strings"
 
+	"github.com/joshhartwig/blogo/internal/markdown"
 	"github.com/joshhartwig/blogo/internal/models"
 )
 
@@ -11,13 +14,12 @@ type PostRepository struct {
 	Posts []models.Post
 }
 
-func NewPostRepository(posts []models.Post) PostRepository {
-	sorted := []models.Post{}
-	sorted = append(sorted, posts...)
-	slices.SortFunc(sorted, sortPostsByDate)
+func NewPostRepository(fs fs.FS) PostRepository {
+	posts := markdown.GetMarkdownFromFS(fs) // fetch posts from content directory
+	slices.SortFunc(posts, sortPostsByDate)
 
 	return PostRepository{
-		Posts: sorted,
+		Posts: posts,
 	}
 }
 
@@ -155,4 +157,13 @@ func (p *PostRepository) GetAllPostsInOrder() []models.Post {
 		return []models.Post{}
 	}
 	return p.Posts
+}
+
+func (p *PostRepository) GetPostBySlug(slug string) (models.Post, error) {
+	for _, p := range p.Posts {
+		if p.Metadata.Slug == slug {
+			return p, nil
+		}
+	}
+	return models.Post{}, errors.New("no posts found")
 }
