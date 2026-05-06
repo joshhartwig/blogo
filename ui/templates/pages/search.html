@@ -2,12 +2,12 @@
 
 {{define "main"}}
 <h1>Search Results for "{{.Term}}"</h1>
-{{if .Posts}}
+{{if .Page.Posts}}
   <ul>
-    {{range .Posts}}
+    {{range .Page.Posts}}
       <li>
-        <a href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a>
-        <span>({{.Metadata.Date.Format "Jan 2, 2006"}})</span>
+        <a href="/posts/{{.Page.Metadata.Slug}}">{{.Page.Metadata.Title}}</a>
+        <span>({{.Page.Metadata.Date.Format "Jan 2, 2006"}})</span>
       </li>
     {{end}}
   </ul>

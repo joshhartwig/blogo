@@ -14,10 +14,10 @@
     <ul>
       {{range .Posts}}
       <li>
-        <time class="post-date" datetime="{{.Metadata.Date.Format "2006-01-02"}}">
-          {{.Metadata.Date.Format "Jan 2, 2006"}}
+        <time class="post-date" datetime="{{.Page.Metadata.Date.Format "2006-01-02"}}">
+          {{.Page.Metadata.Date.Format "Jan 2, 2006"}}
         </time>
-        <a href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a>
+        <a href="/posts/{{.Page.Metadata.Slug}}">{{.Page.Metadata.Title}}</a>
       </li>
       {{end}}
     </ul>
