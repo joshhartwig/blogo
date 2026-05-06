@@ -33,8 +33,9 @@ func (s *Server) homeHandler(w http.ResponseWriter, r *http.Request) {
 	var pagePosts = []models.Post{}
 
 	// if the post count is < 5 do the max else do 5
-	if len(s.postRepo.Posts) < 5 {
-		pagePosts = s.postRepo.GetTopPosts(min(len(s.postRepo.Posts)))
+	var postCount = s.postRepo.Count()
+	if postCount < 5 {
+		pagePosts = s.postRepo.GetTopPosts(min(postCount))
 	} else {
 		pagePosts = s.postRepo.GetTopPosts(5)
 	}
@@ -60,7 +61,7 @@ func (s *Server) listPostHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	pagination := models.NewPagination(page, s.cfg.PostsPerPage, len(s.postRepo.Posts))
+	pagination := models.NewPagination(page, s.cfg.PostsPerPage, s.postRepo.Count())
 	start := pagination.PostsStart
 	end := pagination.PostsEnd
 	//fmt.Printf("start %d end %d %v", start, end, pagination)

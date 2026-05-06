@@ -19,7 +19,7 @@ type Server struct {
 	cfg           config.SiteConfig
 	mux           *http.ServeMux
 	templateCache map[string]*template.Template // use to search for template by name
-	postRepo      posts.PostRepository
+	postRepo      posts.Repository
 	logger        *slog.Logger
 }
 

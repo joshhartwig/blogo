@@ -49,7 +49,7 @@ func (r *Repository) GetPostsBetweenRange(x, y int) []models.Post {
 		return []models.Post{}
 	}
 	// set upper bounds
-	upperBounds := len(p.Posts)
+	upperBounds := len(r.Posts)
 
 	// guard against negatives
 	if x < 0 {
@@ -86,7 +86,7 @@ func (r *Repository) SearchPosts(term string) []models.Post {
 	// create a map to hold posts that match
 	temp := make(map[string]models.Post)
 
-	for _, v := range p.Posts {
+	for _, v := range r.Posts {
 		// search content for term
 		if strings.Contains(strings.ToLower(string(v.Content)), term) {
 			//results = append(results, v)

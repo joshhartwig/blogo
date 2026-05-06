@@ -6,7 +6,7 @@ import (
 
 func TestNewPostRepo(t *testing.T) {
 	testPosts := getSampleTestPosts(10)
-	repo := PostRepository{
+	repo := Repository{
 		Posts: testPosts,
 	}
 
@@ -19,7 +19,7 @@ func TestNewPostRepo(t *testing.T) {
 
 func TestSearchPosts(t *testing.T) {
 	testPosts := getSampleTestPosts(10)
-	repo := PostRepository{
+	repo := Repository{
 		Posts: testPosts,
 	}
 
