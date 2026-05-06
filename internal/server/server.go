@@ -37,7 +37,6 @@ func New(cfg config.SiteConfig, logger *slog.Logger) (*Server, error) {
 	}
 
 	s.Routes()
-
 	return s, nil
 }
 
