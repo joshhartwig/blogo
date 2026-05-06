@@ -7,9 +7,12 @@ import (
 	"github.com/joshhartwig/blogo/ui"
 )
 
-func (s *Server) Routes() {
+func (s *Server) Routes() error {
 
-	staticFS, _ := fs.Sub(ui.Files, "static")
+	staticFS, err := fs.Sub(ui.Files, "static")
+	if err != nil {
+		return err
+	}
 
 	// file server for UI static assets
 	s.mux.Handle("GET /static/",
@@ -40,4 +43,6 @@ func (s *Server) Routes() {
 
 	s.mux.Handle("/ping", apiHandler(ping))
 	s.mux.Handle("/rss", apiHandler(s.rssHandler))
+
+	return nil
 }
