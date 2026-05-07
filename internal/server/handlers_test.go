@@ -67,7 +67,7 @@ func (f *fakeRepo) GetAllPostsInOrder() []models.Post {
 
 func newTestServer(t *testing.T, repo PostRepository) *Server {
 	t.Helper()
-	tc, err := newTemplateCache()
+	tc, err := newTemplateCache("default")
 	if err != nil {
 		t.Fatalf("template cache: %v", err)
 	}

@@ -9,7 +9,7 @@ import (
 
 func (s *Server) Routes() error {
 
-	staticFS, err := fs.Sub(ui.Files, "static")
+	staticFS, err := fs.Sub(ui.Files, "themes/"+s.cfg.Theme+"/static")
 	if err != nil {
 		return err
 	}

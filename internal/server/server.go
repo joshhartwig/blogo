@@ -34,7 +34,7 @@ type Server struct {
 }
 
 func New(cfg config.SiteConfig, logger *slog.Logger) (*Server, error) {
-	templateCache, err := newTemplateCache()
+	templateCache, err := newTemplateCache(cfg.Theme)
 	if err != nil {
 		return nil, fmt.Errorf("error creating new template cache: %w", err)
 	}
@@ -60,8 +60,8 @@ func New(cfg config.SiteConfig, logger *slog.Logger) (*Server, error) {
 	return s, nil
 }
 
-func newTemplateCache() (map[string]*template.Template, error) {
-	templateFS, err := fs.Sub(ui.Files, "templates")
+func newTemplateCache(theme string) (map[string]*template.Template, error) {
+	templateFS, err := fs.Sub(ui.Files, "themes/"+theme+"/templates")
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,6 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		"partials/*.html",
 		"base.html",
 	)
-
 }
 
 func (s *Server) ListenAndServe(addr string) error {
