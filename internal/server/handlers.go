@@ -101,7 +101,12 @@ func (s *Server) showPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.render(w, http.StatusOK, "post", post)
+	pageData := PageData{
+		Site: s.cfg,
+		Page: post,
+	}
+
+	s.render(w, http.StatusOK, "post", pageData)
 }
 
 func (s *Server) projectsHandler(w http.ResponseWriter, r *http.Request) {
