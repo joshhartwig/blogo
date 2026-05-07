@@ -134,7 +134,7 @@ func (s *Server) rssHandler(w http.ResponseWriter, r *http.Request) {
 		Item:        items,
 	}
 
-	for _, post := range s.postRepo.Posts {
+	for _, post := range s.postRepo.GetAllPostsInOrder() {
 		item := models.Item{
 			Title:       post.Metadata.Title,
 			Link:        post.Metadata.Slug,

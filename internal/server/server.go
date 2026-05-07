@@ -10,16 +10,26 @@ import (
 	"time"
 
 	"github.com/joshhartwig/blogo/internal/config"
+	"github.com/joshhartwig/blogo/internal/models"
 	"github.com/joshhartwig/blogo/internal/posts"
 	"github.com/joshhartwig/blogo/internal/templates"
 	"github.com/joshhartwig/blogo/ui"
 )
 
+type PostRepository interface {
+	Count() int
+	GetTopPosts(n int) []models.Post
+	GetPostsBetweenRange(x, y int) []models.Post
+	GetPostBySlug(slug string) (models.Post, error)
+	SearchPosts(term string) []models.Post
+	GetAllPostsInOrder() []models.Post
+}
+
 type Server struct {
 	cfg           config.SiteConfig
 	mux           *http.ServeMux
 	templateCache map[string]*template.Template // use to search for template by name
-	postRepo      posts.Repository
+	postRepo      PostRepository
 	logger        *slog.Logger
 }
 

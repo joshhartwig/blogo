@@ -15,15 +15,15 @@ type Repository struct {
 	bySlug map[string]models.Post
 }
 
-func NewPostRepository(fs fs.FS) (Repository, error) {
+func NewPostRepository(fs fs.FS) (*Repository, error) {
 	posts, err := markdown.GetMarkdownFromFS(fs) // fetch posts from content directory
 	if err != nil {
-		return Repository{}, err
+		return &Repository{}, err
 	}
 
 	slices.SortFunc(posts, sortPostsByDate)
 
-	return Repository{
+	return &Repository{
 		Posts:  posts,
 		bySlug: make(map[string]models.Post),
 	}, nil
