@@ -7,13 +7,13 @@
     {{range .Page.Posts}}
       <article class="post-item">
         <h2 class="post-title">
-          <a href="/posts/{{.Page.Metadata.Slug}}">{{.Page.Metadata.Title}}</a>
+          <a href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a>
         </h2>
-        <time class="post-date" datetime="{{.Page.Metadata.Date.Format "2006-01-02"}}">
-          {{.Page.Metadata.Date.Format "January 2, 2006"}}
+        <time class="post-date" datetime="{{.Metadata.Date.Format "2006-01-02"}}">
+          {{.Metadata.Date.Format "January 2, 2006"}}
         </time>
-        <p class="post-summary">{{.Page.Metadata.Summary}}</p>
-        
+        <p class="post-summary">{{.Metadata.Summary}}</p>
+
       </article>
     {{end}}
   </section>
