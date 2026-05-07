@@ -1,24 +1,32 @@
 package posts
 
 import (
+	"errors"
+	"io/fs"
 	"slices"
 	"strings"
 
+	"github.com/joshhartwig/blogo/internal/markdown"
 	"github.com/joshhartwig/blogo/internal/models"
 )
 
-type PostRepository struct {
-	Posts []models.Post
+type Repository struct {
+	Posts  []models.Post
+	bySlug map[string]models.Post
 }
 
-func NewPostRepository(posts []models.Post) PostRepository {
-	sorted := []models.Post{}
-	sorted = append(sorted, posts...)
-	slices.SortFunc(sorted, sortPostsByDate)
-
-	return PostRepository{
-		Posts: sorted,
+func NewPostRepository(fs fs.FS) (Repository, error) {
+	posts, err := markdown.GetMarkdownFromFS(fs) // fetch posts from content directory
+	if err != nil {
+		return Repository{}, err
 	}
+
+	slices.SortFunc(posts, sortPostsByDate)
+
+	return Repository{
+		Posts:  posts,
+		bySlug: make(map[string]models.Post),
+	}, nil
 }
 
 // sortPostsByDate compares two posts by their metadata date.
@@ -39,13 +47,13 @@ func sortPostsByDate(x, y models.Post) int {
 // It ensures the indices are within valid bounds. If the repository has no posts,
 // it returns an empty slice. Negative indices are clamped to zero, and indices
 // exceeding the upper bound are clamped to the last post index.
-func (p *PostRepository) GetPostsBetweenRange(x, y int) []models.Post {
+func (r *Repository) GetPostsBetweenRange(x, y int) []models.Post {
 	// if we have no posts return empty slice
-	if len(p.Posts) == 0 {
+	if len(r.Posts) == 0 {
 		return []models.Post{}
 	}
 	// set upper bounds
-	upperBounds := len(p.Posts)
+	upperBounds := len(r.Posts)
 
 	// guard against negatives
 	if x < 0 {
@@ -65,14 +73,14 @@ func (p *PostRepository) GetPostsBetweenRange(x, y int) []models.Post {
 		x = y
 	}
 
-	return p.Posts[x:y]
+	return r.Posts[x:y]
 }
 
 // SearchPosts searches for posts containing the specified term in their content,
 // slug, summary, title, or tags. It returns a slice of posts that match the term.
-func (p *PostRepository) SearchPosts(term string) []models.Post {
+func (r *Repository) SearchPosts(term string) []models.Post {
 	results := []models.Post{}
-	if len(p.Posts) == 0 {
+	if len(r.Posts) == 0 {
 		return results
 	}
 
@@ -82,7 +90,7 @@ func (p *PostRepository) SearchPosts(term string) []models.Post {
 	// create a map to hold posts that match
 	temp := make(map[string]models.Post)
 
-	for _, v := range p.Posts {
+	for _, v := range r.Posts {
 		// search content for term
 		if strings.Contains(strings.ToLower(string(v.Content)), term) {
 			//results = append(results, v)
@@ -135,24 +143,41 @@ func (p *PostRepository) SearchPosts(term string) []models.Post {
 // GetTopPosts returns a slice containing the top 'count' posts from the repository.
 // If 'count' exceeds the number of available posts, it is adjusted to avoid out-of-bounds errors.
 // The posts are returned in the order they are stored in the repository.
-func (p *PostRepository) GetTopPosts(count int) []models.Post {
+func (r *Repository) GetTopPosts(count int) []models.Post {
 	if count < 0 {
 		count = 0
 	}
-	if len(p.Posts) == 0 {
+	if len(r.Posts) == 0 {
 		return []models.Post{}
 	}
 
-	if count > len(p.Posts) {
-		return p.Posts[0:len(p.Posts)]
+	if count > len(r.Posts) {
+		return r.Posts[0:len(r.Posts)]
 	}
 
-	return p.Posts[0:count]
+	return r.Posts[0:count]
 }
 
-func (p *PostRepository) GetAllPostsInOrder() []models.Post {
-	if len(p.Posts) == 0 {
+func (r *Repository) GetAllPostsInOrder() []models.Post {
+	if len(r.Posts) == 0 {
 		return []models.Post{}
 	}
-	return p.Posts
+	return r.Posts
+}
+
+func (r *Repository) GetPostBySlug(slug string) (models.Post, error) {
+	bySlug := make(map[string]models.Post)
+	for _, post := range r.Posts {
+		bySlug[post.Metadata.Slug] = post
+	}
+
+	found, ok := bySlug[slug]
+	if !ok {
+		return models.Post{}, errors.New("no post found")
+	}
+	return found, nil
+}
+
+func (r *Repository) Count() int {
+	return len(r.Posts)
 }

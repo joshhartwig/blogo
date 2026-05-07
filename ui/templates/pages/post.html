@@ -1,11 +1,11 @@
-{{define "title"}}{{.Metadata.Title}}{{end}}
+{{define "title"}}{{.Page.Metadata.Title}}{{end}}
 
 {{define "main"}}
 <section class="container">
   <article>
-    <h1>{{.Metadata.Title}}</h1>
+    <h1>{{.Page.Metadata.Title}}</h1>
     <div class="content">
-      {{.Content}}
+      {{.Page.Content}}
     </div>
   </article>
 </section>

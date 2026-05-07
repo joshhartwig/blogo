@@ -1,4 +1,4 @@
-package main
+package templates
 
 import (
 	"errors"
@@ -17,7 +17,7 @@ import (
 //
 // The resulting *template.Template for each page is stored in a map, keyed by the page's filename.
 // Returns the cache map and any error encountered during parsing.
-func LoadTemplatesAsMap(fileSys fs.FS, pagesGlobPath, partialsGlobPath, basePath string) (map[string]*template.Template, error) {
+func NewCache(fileSys fs.FS, pagesGlobPath, partialsGlobPath, basePath string) (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 
 	// get all the pages from the pages path
@@ -29,11 +29,10 @@ func LoadTemplatesAsMap(fileSys fs.FS, pagesGlobPath, partialsGlobPath, basePath
 	// iterate through each page
 	for _, page := range pages {
 		fileName := filepath.Base(page) // strip the name from the filepath ex home.html
-		names := strings.Split(fileName, ".")
-		name := names[0]
+		name := strings.TrimSuffix(fileName, filepath.Ext(fileName))
 
-		if len(name) == 0 {
-			return nil, errors.New("the page file name does not contain a . when trying to split")
+		if name == "" {
+			return nil, errors.New("template page name cannot be empty")
 		}
 
 		// parse the base template

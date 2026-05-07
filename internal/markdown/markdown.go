@@ -1,12 +1,12 @@
-package main
+package markdown
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
 	"io/fs"
 	"path/filepath"
-	"slices"
+	"regexp"
+	"strings"
 	"time"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
@@ -60,76 +60,22 @@ func convertMarkdownToHtml(slug string, data []byte) (models.Post, error) {
 	return post, nil
 }
 
-func readMarkdownReturnPostsInOrder(fileSystem fs.FS) ([]models.Post, error) {
-	var posts []models.Post
-
-	// First, look for folder-based posts (*/index.md)
-	folderFiles, err := fs.Glob(fileSystem, "*/index.md")
-	if err != nil {
-		return nil, err
-	}
-
-	for _, path := range folderFiles {
-		data, err := fs.ReadFile(fileSystem, path)
-		if err != nil {
-			return nil, err
-		}
-
-		slug := slugify(filepath.Dir(path))
-		post, err := convertMarkdownToHtml(slug, data)
-		if err != nil {
-			return nil, err
-		}
-		posts = append(posts, post)
-	}
-
-	// Also check for flat .md files (backwards compatibility)
-	flatFiles, err := fs.Glob(fileSystem, "*.md")
-	if err != nil {
-		return nil, err
-	}
-
-	for _, path := range flatFiles {
-		data, err := fs.ReadFile(fileSystem, path)
-		if err != nil {
-			return nil, err
-		}
-
-		slug := slugify(filepath.Base(path))
-		post, err := convertMarkdownToHtml(slug, data)
-		if err != nil {
-			return nil, err
-		}
-		posts = append(posts, post)
-	}
-
-	if len(posts) == 0 {
-		return nil, fmt.Errorf("no matching files")
-	}
-
-	slices.SortFunc(posts, func(a, b models.Post) int {
-		return a.Metadata.Date.Compare(b.Metadata.Date)
-	})
-
-	return posts, nil
-}
-
 // readMarkdownContent reads the local content directory for .md files, converts them to a Post struct and
 // adds them to a template cache. It supports both folder-based posts (post-name/index.md) and
 // flat .md files for backwards compatibility.
-func readMarkdownContent(fileSystem fs.FS) (map[string]models.Post, error) {
-	posts := make(map[string]models.Post)
+func GetMarkdownFromFS(fileSystem fs.FS) ([]models.Post, error) {
+	posts := []models.Post{}
 
-	// First, look for folder-based posts (*/index.md)
-	folderFiles, err := fs.Glob(fileSystem, "*/index.md")
+	filenames, err := fs.Glob(fileSystem, "*/index.md")
 	if err != nil {
-		return nil, err
+		return posts, err
 	}
 
-	for _, path := range folderFiles {
+	// iterate through each filename and read the file
+	for _, path := range filenames {
 		data, err := fs.ReadFile(fileSystem, path)
 		if err != nil {
-			return nil, err
+			return posts, err
 		}
 
 		// For folder-based posts, use the folder name as the slug
@@ -137,41 +83,75 @@ func readMarkdownContent(fileSystem fs.FS) (map[string]models.Post, error) {
 
 		post, err := convertMarkdownToHtml(slug, data)
 		if err != nil {
-			return nil, err
+			return posts, err
 		}
 		if post.Metadata.Draft {
 			continue
 		}
-		posts[slug] = post
+
+		post.Metadata.Slug = slug
+		posts = append(posts, post)
 	}
 
 	// Also check for flat .md files (backwards compatibility)
 	flatFiles, err := fs.Glob(fileSystem, "*.md")
 	if err != nil {
-		return nil, err
+		return posts, err
 	}
 
 	for _, path := range flatFiles {
 		data, err := fs.ReadFile(fileSystem, path)
 		if err != nil {
-			return nil, err
+			return posts, err
 		}
 
 		slug := slugify(filepath.Base(path))
 
 		post, err := convertMarkdownToHtml(slug, data)
 		if err != nil {
-			return nil, err
+			return posts, err
 		}
 		if post.Metadata.Draft {
 			continue
 		}
-		posts[slug] = post
+
+		post.Metadata.Slug = slug
+		posts = append(posts, post)
 	}
 
 	if len(posts) == 0 {
-		return nil, fmt.Errorf("no matching files")
+		return posts, err
 	}
 
 	return posts, nil
+}
+
+// calculateDuration estimates the reading duration in minutes for the given content string.
+// It assumes an average reading speed of 200 words per minute.
+func calculateDuration(content string) int {
+	const wordsPerMinute = 200
+	words := strings.Fields(content)
+	if len(words) == 0 {
+		return 1
+	}
+	duration := (len(words) / wordsPerMinute) + 1
+	return duration
+}
+
+// slugify generates a URL-friendly slug from a string
+func slugify(s string) string {
+	// Remove file extension if present
+	if dot := strings.LastIndex(s, "."); dot != -1 {
+		s = s[:dot]
+	}
+	s = strings.ToLower(s)                   // lower
+	s = strings.ReplaceAll(s, " ", "-")      // replace spaces with dash
+	s = strings.ReplaceAll(s, "_", "-")      // underscores with -
+	re := regexp.MustCompile(`[^a-z0-9\-]+`) // replace lower case, digits, hypens
+	s = re.ReplaceAllString(s, "")
+	// Collapse multiple consecutive dashes into single dash
+	reDash := regexp.MustCompile(`-+`)
+	s = reDash.ReplaceAllString(s, "-")
+	s = strings.Trim(s, "-")
+	return s
 }

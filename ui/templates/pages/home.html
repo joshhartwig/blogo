@@ -12,7 +12,7 @@
   <section class="posts-list" aria-label="Blog posts">
     <h3>Writing</h3>
     <ul>
-      {{range .Posts}}
+      {{range .Page.Posts}}
       <li>
         <time class="post-date" datetime="{{.Metadata.Date.Format "2006-01-02"}}">
           {{.Metadata.Date.Format "Jan 2, 2006"}}

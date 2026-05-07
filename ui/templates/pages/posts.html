@@ -2,9 +2,9 @@
 
 {{define "main"}}
 <!-- Posts -->
-  {{if .Posts}}
+  {{if .Page.Posts}}
     <section class="posts-list" aria-label="Blog posts">
-    {{range .Posts}}
+    {{range .Page.Posts}}
       <article class="post-item">
         <h2 class="post-title">
           <a href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a>
@@ -13,7 +13,7 @@
           {{.Metadata.Date.Format "January 2, 2006"}}
         </time>
         <p class="post-summary">{{.Metadata.Summary}}</p>
-        
+
       </article>
     {{end}}
   </section>

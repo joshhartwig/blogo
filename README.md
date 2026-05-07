@@ -8,6 +8,12 @@ Blogo is a lightweight, fast, and customizable blog engine written in Go, design
 
 - Fix the theme support to reduce duplication in code
 
+## Run
+
+```bash
+blogo serve --config ./config.toml --addr :8080
+```
+
 ## Installation
 
 ```bash
