@@ -6,4 +6,7 @@ services:
     ports:
       - "3999:3999"
     volumes:
-      - ./content:/app/content:ro
+      - ./config.toml:/config/config.toml:ro
+      - ./content:/content:ro
+      - ./themes:/themes:ro
+    command: ["serve", "--config", "/config/config.toml", "--addr", ":3999"]

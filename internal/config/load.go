@@ -68,7 +68,7 @@ func Merge(def, user SiteConfig) SiteConfig {
 	return combined
 }
 
-// loads the embedded default toml
+// loaPs the embedded default toml
 func loadDefault() (SiteConfig, error) {
 	var sc SiteConfig
 	bytes, err := defaultConfigFS.ReadFile("default.toml")

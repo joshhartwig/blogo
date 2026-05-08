@@ -24,6 +24,7 @@ COPY --from=build /out/blogo /app/blogo
 # Optional: bake default content too (handy for first run)
 COPY content /app/content
 
-EXPOSE 3999
+EXPOSE 4000
 USER nonroot:nonroot
 ENTRYPOINT ["/app/blogo"]
+CMD ["serve", "--config", "/config/config.toml", "--addr", ":4000"]
