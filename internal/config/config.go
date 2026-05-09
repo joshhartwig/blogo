@@ -11,6 +11,7 @@ type SiteConfig struct {
 }
 
 type AuthorConfig struct {
-	Name string `toml:"name" yaml:"name"`
-	Bio  string `toml:"bio" yaml:"bio"`
+	Name  string `toml:"name" yaml:"name"`
+	Bio   string `toml:"bio" yaml:"bio"`
+	Email string `toml:"email" yaml:"email"`
 }

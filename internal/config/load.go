@@ -65,6 +65,10 @@ func Merge(def, user SiteConfig) SiteConfig {
 		combined.Author.Name = def.Author.Name
 	}
 
+	if user.Author.Email == "" {
+		combined.Author.Email = def.Author.Email
+	}
+
 	return combined
 }
 

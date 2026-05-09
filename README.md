@@ -4,10 +4,6 @@ Blogo is a lightweight, fast, and customizable blog engine written in Go, design
 
 ![Screenshot of Blogo](blog.png)
 
-## TODO
-
-- Fix the theme support to reduce duplication in code
-
 ## Run
 
 ```bash
@@ -28,12 +24,18 @@ docker compose up --build
 ## Features
 
 - No database needed, reads markdown files direct from content directory
+- Site configuration via external `.toml`
+- Theme support via external `/theme` folder but also contains embedded default theme
 - Leverages built in standard libraries for almost everything short of Markdown & Frontmatter parsing.
 - Lightweight
 
 ## Contributing
 
-None needed.
+Go away!
+
+## AI usage
+
+The original application was built almost entirely without AI, the most recent refactor leveraged claude code to help with the refactor and to add quite a bit of unit tests. For areas where I need to polish my skillset, I try my best to not use AI, or at very least to ask what the AI would do and implement myself. For things that I have done frequently, I am fine with AI doing some of it.
 
 ## License
 
