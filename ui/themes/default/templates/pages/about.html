@@ -1,4 +1,4 @@
-{{define "title"}}About Me{{end}}
+{{define "title"}}{{.Site.Title}}{{end}}
 
 
 {{define "main"}}
@@ -12,6 +12,6 @@
     <li>UI/UX Design</li>
   </ul>
   <h2>Contact</h2>
-  <p>You can reach me at <a href="mailto:your.email@example.com">your.email@example.com</a>.</p>
-</section
+  <p>You can reach me at <a href="mailto:{{.Site.Author.Email}}">{{.Site.Author.Email}}</a>.</p>
+</section>
 {{end}}

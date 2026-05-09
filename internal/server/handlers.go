@@ -55,7 +55,10 @@ func (s *Server) homeHandler(w http.ResponseWriter, r *http.Request) {
 
 // about handler renders the about page
 func (s *Server) aboutHandler(w http.ResponseWriter, r *http.Request) {
-	s.render(w, http.StatusOK, "about", nil)
+	pageData := PageData{
+		Site: s.cfg,
+	}
+	s.render(w, http.StatusOK, "about", pageData)
 }
 
 // route: /posts lists all posts with paging

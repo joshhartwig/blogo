@@ -7,3 +7,4 @@ content_dir = "/content"
 [author]
 name = "Josh Hartwig"
 bio = "Just another developer"
+email = "randomguy@aol.com"
