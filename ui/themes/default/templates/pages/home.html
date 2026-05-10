@@ -1,25 +1,22 @@
-{{define "title"}}{{.Site.Title}}{{end}}
+{{define "title"}}{{.Site.SiteTitle}}{{end}}
 
 {{define "main"}}
   <header class="blog-header">
     <h1>Josh <span class="red-strike">breaks</span> builds stuff</h1>
     <p class="subtitle">
-      Welcome to my blog. My name is Josh and I like all things technology. Here you will find all things that interest me that I thought were worth writing about.
-      If you found any of it interesting, drop me a line and let me know. Thanks for stopping by!
+      I'm Josh — a software developer focused on Go, web infrastructure, and building tools that get out of your way.
+      Here's what I've been writing about.
     </p>
   </header>
 
-  <section class="posts-list" aria-label="Blog posts">
-    <h3>Writing</h3>
-    <ul>
-      {{range .Page.Posts}}
-      <li>
-        <time class="post-date" datetime="{{.Metadata.Date.Format "2006-01-02"}}">
-          {{.Metadata.Date.Format "Jan 2, 2006"}}
-        </time>
-        <a href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a>
-      </li>
-      {{end}}
-    </ul>
+  <section class="blog-list" aria-label="Recent posts">
+    <h3>Recent Writing</h3>
+    {{range .Page.Posts}}
+    <article>
+      <h2><a class="post-title-link" href="/posts/{{.Metadata.Slug}}">{{.Metadata.Title}}</a></h2>
+      <p class="meta"><time datetime="{{.Metadata.Date.Format "2006-01-02"}}">{{.Metadata.Date.Format "January 2, 2006"}}</time></p>
+      {{if .Metadata.Summary}}<p>{{.Metadata.Summary}}</p>{{end}}
+    </article>
+    {{end}}
   </section>
 {{end}}

@@ -1,10 +1,8 @@
-{{define "title"}}{{.Site.SiteTitle}}{{end}}
-
+{{define "title"}}{{.Site.SiteTitle}} - About{{end}}
 
 {{define "main"}}
-<section class="container">
   <h1>About Me</h1>
-  <p>Hello! I'm Joshua Hartwig, a passionate developer and lifelong learner. I enjoy building web applications, exploring new technologies, and sharing knowledge with others.</p>
+  <p>Hello! I'm Joshua Hartwig, a software developer with a focus on Go, backend systems, and web infrastructure. I enjoy building things that are fast, simple, and maintainable.</p>
   <h2>Skills</h2>
   <ul>
     <li>Web Development (HTML, CSS, JavaScript, Go)</li>
@@ -13,5 +11,4 @@
   </ul>
   <h2>Contact</h2>
   <p>You can reach me at <a href="mailto:{{.Site.Author.Email}}">{{.Site.Author.Email}}</a>.</p>
-</section>
 {{end}}

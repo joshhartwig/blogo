@@ -11,18 +11,12 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/joshhartwig/blogo/internal/config"
 	"github.com/joshhartwig/blogo/internal/models"
 )
 
 var (
 	slugRegex = regexp.MustCompile(`^[a-z0-9-]+$`)
 )
-
-type PageData struct {
-	Site config.SiteConfig
-	Page any
-}
 
 // ping is used for testing endpoints to ensure handlers are working
 func ping(w http.ResponseWriter, r *http.Request) {
@@ -46,19 +40,12 @@ func (s *Server) homeHandler(w http.ResponseWriter, r *http.Request) {
 		pagePosts = s.postRepo.GetTopPosts(5)
 	}
 
-	data := models.HomePageData{
-		Posts: pagePosts,
-	}
-
-	s.render(w, http.StatusOK, "home", data)
+	s.render(w, http.StatusOK, "home", models.PostListData{Posts: pagePosts})
 }
 
 // about handler renders the about page
 func (s *Server) aboutHandler(w http.ResponseWriter, r *http.Request) {
-	pageData := PageData{
-		Site: s.cfg,
-	}
-	s.render(w, http.StatusOK, "about", pageData)
+	s.render(w, http.StatusOK, "about", nil)
 }
 
 // route: /posts lists all posts with paging
@@ -74,12 +61,10 @@ func (s *Server) listPostHandler(w http.ResponseWriter, r *http.Request) {
 	start := pagination.PostsStart
 	end := pagination.PostsEnd
 	//fmt.Printf("start %d end %d %v", start, end, pagination)
-	data := models.HomePageData{
+	s.render(w, http.StatusOK, "posts", models.PostListData{
 		Posts:      s.postRepo.GetPostsBetweenRange(start, end),
 		Pagination: pagination,
-	}
-
-	s.render(w, http.StatusOK, "posts", data)
+	})
 }
 
 // postHandler renders our post content assuming the slug is found
