@@ -1,0 +1,20 @@
+name        = "default"
+description = "Light theme with automatic dark mode"
+
+[fonts]
+sans            = "'Rubik', 'Inter', ui-sans-serif, system-ui"
+mono            = "'Ubuntu Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas"
+google_fonts_url = "https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+
+[colors]
+bg         = "#f6f7f9"
+bg_elev    = "#ffffff"
+fg         = "#0f172a"
+muted      = "#64748b"
+border     = "#e5e7eb"
+link       = "#0ea5e9"
+link_hover = "#0284c7"
+
+[tokens]
+radius = "12px"
+shadow = "0 8px 30px rgba(2, 6, 23, 0.08)"

@@ -1,0 +1,20 @@
+name        = "dracula"
+description = "Dracula dark theme"
+
+[fonts]
+sans            = "'Inter', ui-sans-serif, system-ui"
+mono            = "'Fira Code', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas"
+google_fonts_url = "https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:wght@400;600;800&display=swap"
+
+[colors]
+bg         = "#282a36"
+bg_elev    = "#44475a"
+fg         = "#f8f8f2"
+muted      = "#6272a4"
+border     = "#6272a4"
+link       = "#bd93f9"
+link_hover = "#ff79c6"
+
+[tokens]
+radius = "8px"
+shadow = "0 8px 30px rgba(0, 0, 0, 0.55)"

@@ -25,7 +25,8 @@ docker compose up --build
 
 - No database needed, reads markdown files direct from content directory
 - Site configuration via external `.toml`
-- Theme support via external `/theme` folder but also contains embedded default theme
+- Theme system: each theme is a `theme.toml` (fonts, colors, tokens) + `theme.css` (CSS variables) — templates and static assets are shared across themes
+- Adding a theme requires only two files; no template duplication
 - Leverages built in standard libraries for almost everything short of Markdown & Frontmatter parsing.
 - Lightweight
 

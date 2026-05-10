@@ -1,0 +1,110 @@
+/* ---------- Dracula theme: design tokens ---------- */
+:root {
+  --bg:       #282a36;
+  --bg-elev:  #44475a;
+  --fg:       #f8f8f2;
+  --muted:    #6272a4;
+  --border:   #6272a4;
+  --link:     #bd93f9;
+  --link-hover: #ff79c6;
+
+  --cyan:   #8be9fd;
+  --green:  #50fa7b;
+  --orange: #ffb86c;
+  --pink:   #ff79c6;
+  --purple: #bd93f9;
+  --red:    #ff5555;
+  --yellow: #f1fa8c;
+
+  --radius: 8px;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  --font-mono: 'Fira Code', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --container: 85ch;
+}
+
+/* ---------- Dracula structural overrides ---------- */
+
+body::before {
+  background:
+    radial-gradient(1200px 600px at 20% -10%, color-mix(in srgb, var(--purple) 8%, transparent), transparent 60%),
+    radial-gradient(800px 400px at 110% 10%,  color-mix(in srgb, var(--pink)   6%, transparent), transparent 60%);
+}
+
+::selection {
+  background: var(--bg-elev);
+  color: var(--fg);
+}
+
+nav a {
+  opacity: 0.85;
+  transition: opacity 0.15s, color 0.15s;
+}
+nav a:hover,
+nav a.active { opacity: 1; color: var(--purple); text-decoration: none; }
+
+h1, h2, h3, h4, h5 { color: var(--purple); }
+h1 { color: var(--pink); }
+h3 { color: var(--cyan); }
+
+button:hover, input[type="submit"]:hover {
+  background: color-mix(in srgb, var(--purple) 15%, var(--bg-elev));
+}
+
+.intro .avatar {
+  border: 2px solid var(--purple);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--purple) 35%, transparent);
+}
+
+article {
+  transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+}
+article:hover {
+  border-color: var(--purple);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--purple) 20%, transparent);
+}
+article h2 { color: var(--fg); }
+
+.post-title-link:hover { color: var(--purple); text-decoration: none; }
+
+code {
+  background: color-mix(in srgb, var(--cyan) 10%, var(--bg-elev));
+  color: var(--cyan);
+}
+pre { background: #21222c; }
+pre code { background: transparent; color: inherit; padding: 0; }
+
+blockquote {
+  border-left: 4px solid var(--purple);
+  background: color-mix(in srgb, var(--purple) 8%, var(--bg));
+}
+
+.tag {
+  background: color-mix(in srgb, var(--purple) 12%, var(--bg-elev));
+  border: 1px solid color-mix(in srgb, var(--purple) 30%, var(--border));
+  color: var(--purple);
+  opacity: 1;
+}
+.tag:hover { background: color-mix(in srgb, var(--purple) 22%, var(--bg-elev)); }
+
+.read-more { color: var(--cyan); }
+.read-more:hover { color: var(--green); }
+
+.pagination-link { color: var(--purple); }
+.pagination-link:hover {
+  border-color: var(--purple);
+  background: color-mix(in srgb, var(--purple) 12%, var(--bg-elev));
+}
+
+.search-form input[type="text"]:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--purple) 25%, transparent);
+}
+.search-form button { background: var(--purple); color: var(--bg); }
+.search-form button:hover { background: var(--pink); color: var(--bg); }
+
+.site-footer a:hover { color: var(--purple); }
+
+:focus-visible { outline: 3px solid color-mix(in srgb, var(--purple) 40%, transparent); }

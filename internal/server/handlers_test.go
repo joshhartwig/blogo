@@ -1,7 +1,6 @@
 package server
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/joshhartwig/blogo/internal/config"
 	"github.com/joshhartwig/blogo/internal/models"
+	"github.com/joshhartwig/blogo/internal/posts"
 	tu "github.com/joshhartwig/blogo/internal/testutils"
 )
 
@@ -48,7 +48,7 @@ func (f *fakeRepo) GetPostBySlug(slug string) (models.Post, error) {
 			return p, nil
 		}
 	}
-	return models.Post{}, errors.New("not found")
+	return models.Post{}, posts.ErrPostNotFound
 }
 
 func (f *fakeRepo) SearchPosts(term string) []models.Post {
@@ -67,7 +67,7 @@ func (f *fakeRepo) GetAllPostsInOrder() []models.Post {
 
 func newTestServer(t *testing.T, repo PostRepository) *Server {
 	t.Helper()
-	tc, err := newTemplateCache("default")
+	tc, err := newTemplateCache()
 	if err != nil {
 		t.Fatalf("template cache: %v", err)
 	}

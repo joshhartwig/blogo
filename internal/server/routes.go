@@ -9,15 +9,21 @@ import (
 
 func (s *Server) Routes() error {
 
-	staticFS, err := fs.Sub(ui.Files, "themes/"+s.cfg.Theme+"/static")
+	sharedFS, err := fs.Sub(ui.Files, "static")
 	if err != nil {
 		return err
 	}
-
-	// file server for UI static assets
 	s.mux.Handle("GET /static/",
 		http.StripPrefix("/static",
-			http.FileServer(http.FS(staticFS))))
+			http.FileServer(http.FS(sharedFS))))
+
+	themeFS, err := fs.Sub(ui.Files, "themes/"+s.cfg.Theme+"/static")
+	if err != nil {
+		return err
+	}
+	s.mux.Handle("GET /theme/",
+		http.StripPrefix("/theme",
+			http.FileServer(http.FS(themeFS))))
 
 	// file server for content assets (images in post directories)
 	s.mux.Handle("GET /content/",

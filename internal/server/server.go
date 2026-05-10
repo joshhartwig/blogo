@@ -28,12 +28,14 @@ type PostRepository interface {
 // PageData is the top-level data passed to every template. render() builds it
 // automatically, so handlers only need to supply page-specific data via Page.
 type PageData struct {
-	Site config.SiteConfig
-	Page any
+	Site  config.SiteConfig
+	Theme config.ThemeConfig
+	Page  any
 }
 
 type Server struct {
 	cfg           config.SiteConfig
+	themeCfg      config.ThemeConfig
 	mux           *http.ServeMux
 	templateCache map[string]*template.Template // use to search for template by name
 	postRepo      PostRepository
@@ -41,9 +43,14 @@ type Server struct {
 }
 
 func New(cfg config.SiteConfig, logger *slog.Logger) (*Server, error) {
-	templateCache, err := newTemplateCache(cfg.Theme)
+	templateCache, err := newTemplateCache()
 	if err != nil {
 		return nil, fmt.Errorf("error creating new template cache: %w", err)
+	}
+
+	themeCfg, err := config.LoadTheme(ui.Files, cfg.Theme)
+	if err != nil {
+		return nil, fmt.Errorf("loading theme %q: %w", cfg.Theme, err)
 	}
 
 	postRepo, err := posts.NewPostRepository(os.DirFS(cfg.ContentDir))
@@ -53,6 +60,7 @@ func New(cfg config.SiteConfig, logger *slog.Logger) (*Server, error) {
 
 	s := &Server{
 		cfg:           cfg,
+		themeCfg:      themeCfg,
 		mux:           http.NewServeMux(),
 		templateCache: templateCache,
 		postRepo:      postRepo,
@@ -67,8 +75,8 @@ func New(cfg config.SiteConfig, logger *slog.Logger) (*Server, error) {
 	return s, nil
 }
 
-func newTemplateCache(theme string) (map[string]*template.Template, error) {
-	templateFS, err := fs.Sub(ui.Files, "themes/"+theme+"/templates")
+func newTemplateCache() (map[string]*template.Template, error) {
+	templateFS, err := fs.Sub(ui.Files, "templates")
 	if err != nil {
 		return nil, err
 	}

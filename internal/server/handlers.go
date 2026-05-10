@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/joshhartwig/blogo/internal/models"
 )
 
@@ -87,7 +86,18 @@ func (s *Server) projectsHandler(w http.ResponseWriter, r *http.Request) {
 
 // rssHandler writes an RSS 2.0 XML feed of all posts.
 func (s *Server) rssHandler(w http.ResponseWriter, r *http.Request) {
-	items := []models.Item{}
+	allPosts := s.postRepo.GetAllPostsInOrder()
+	items := make([]models.Item, 0, len(allPosts))
+	for _, post := range allPosts {
+		items = append(items, models.Item{
+			Title:       post.Metadata.Title,
+			Link:        s.cfg.BaseURL + "/posts/" + post.Metadata.Slug,
+			Description: post.Metadata.Summary,
+			Category:    "blog",
+			GUID:        s.cfg.BaseURL + "/posts/" + post.Metadata.Slug,
+		})
+	}
+
 	feedData := models.RSS{
 		Title:       s.cfg.SiteTitle,
 		Link:        s.cfg.BaseURL,
@@ -96,18 +106,6 @@ func (s *Server) rssHandler(w http.ResponseWriter, r *http.Request) {
 		PubDate:     time.Now(),
 		Category:    "blog",
 		Item:        items,
-	}
-
-	for _, post := range s.postRepo.GetAllPostsInOrder() {
-		item := models.Item{
-			Title:       post.Metadata.Title,
-			Link:        post.Metadata.Slug,
-			Description: post.Metadata.Summary,
-			Category:    "blog",
-			GUID:        uuid.New().String(),
-		}
-
-		feedData.Item = append(feedData.Item, item)
 	}
 
 	data, err := xml.Marshal(feedData)
@@ -156,8 +154,9 @@ func (s *Server) render(w http.ResponseWriter, status int, templateName string, 
 	}
 
 	pageData := PageData{
-		Site: s.cfg,
-		Page: data,
+		Site:  s.cfg,
+		Theme: s.themeCfg,
+		Page:  data,
 	}
 
 	buf := new(bytes.Buffer)
