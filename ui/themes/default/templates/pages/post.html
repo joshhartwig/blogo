@@ -1,12 +1,18 @@
 {{define "title"}}{{.Page.Metadata.Title}}{{end}}
 
 {{define "main"}}
-<section class="container">
-  <article>
-    <h1>{{.Page.Metadata.Title}}</h1>
-    <div class="content">
-      {{.Page.Content}}
-    </div>
-  </article>
-</section>
+<article>
+  <h1>{{.Page.Metadata.Title}}</h1>
+  <p class="meta">
+    <time datetime="{{.Page.Metadata.Date.Format "2006-01-02"}}">{{.Page.Metadata.Date.Format "January 2, 2006"}}</time>
+  </p>
+  {{if .Page.Metadata.Tags}}
+  <div class="tags">
+    {{range .Page.Metadata.Tags}}<span class="tag">{{.}}</span>{{end}}
+  </div>
+  {{end}}
+  <div class="content">
+    {{.Page.Content}}
+  </div>
+</article>
 {{end}}

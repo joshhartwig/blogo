@@ -7,16 +7,9 @@ import (
 	"time"
 )
 
-// TemplateData holds data to be passed to HTML templates, including the page title and a list of blog posts.
-type TemplateData struct {
-	Title string
-	Posts []Post
-}
-
-// HomePageData represents the data structure used to render the home page,
-// including the page title, a list of blog posts, and pagination information.
-type HomePageData struct {
-	Title      string
+// PostListData carries the post slice and pagination for list views.
+// Site config is injected automatically by render() — no need to include it here.
+type PostListData struct {
 	Posts      []Post
 	Pagination Pagination
 }
@@ -28,10 +21,6 @@ type Post struct {
 }
 
 // Pagination represents pagination details for a collection of posts.
-// It includes information about the current, next, and previous pages,
-// the total number of posts and pages, and flags indicating the presence
-// of next and previous pages. It also tracks the range of posts displayed
-// on the current page.
 type Pagination struct {
 	CurrentPage int  // current page number
 	NextPage    int  // next page number

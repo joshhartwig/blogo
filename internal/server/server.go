@@ -25,6 +25,13 @@ type PostRepository interface {
 	GetAllPostsInOrder() []models.Post
 }
 
+// PageData is the top-level data passed to every template. render() builds it
+// automatically, so handlers only need to supply page-specific data via Page.
+type PageData struct {
+	Site config.SiteConfig
+	Page any
+}
+
 type Server struct {
 	cfg           config.SiteConfig
 	mux           *http.ServeMux

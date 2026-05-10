@@ -22,30 +22,26 @@
 }
 
 .pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 2rem 0;
-    padding: 1rem 0;
-    border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border);
 }
-
 .pagination-link {
-    padding: 0.5rem 1rem;
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 0.25rem;
-    text-decoration: none;
-    color: #007bff;
+  padding: 0.5rem 1rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--link);
+  transition: border-color .15s, background .15s;
 }
-
 .pagination-link:hover {
-    background: #e9ecef;
+  background: color-mix(in srgb, var(--link) 10%, var(--bg-elev));
 }
-
-.pagination-info {
-    color: #6c757d;
-}
+.pagination-info { color: var(--muted); }
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -341,6 +337,27 @@ blockquote {
 ul, ol { padding-left: 1.25rem; }
 img { max-width: 100%; display: block; margin: 1.25rem 0; border-radius: 10px; }
 hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+/* ---------- Tech stack icons ---------- */
+.tech-stack {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin: .75rem 0;
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  max-width: var(--container);
+  margin: 3rem auto 1.5rem;
+  padding: 1rem 1.25rem 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: .9rem;
+  text-align: center;
+}
+.site-footer a { color: var(--muted); }
+.site-footer a:hover { color: var(--link); }
 
 /* ---------- Accessibility & motion ---------- */
 :focus-visible { outline: 3px solid color-mix(in srgb, var(--link) 40%, transparent); outline-offset: 2px; }
