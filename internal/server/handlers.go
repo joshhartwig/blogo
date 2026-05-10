@@ -30,17 +30,7 @@ func (s *Server) notFoundHandler(w http.ResponseWriter, r *http.Request) {
 
 // homeHandler is our default handler for the '/' route
 func (s *Server) homeHandler(w http.ResponseWriter, r *http.Request) {
-	var pagePosts = []models.Post{}
-
-	// if the post count is < 5 do the max else do 5
-	var postCount = s.postRepo.Count()
-	if postCount < 5 {
-		pagePosts = s.postRepo.GetTopPosts(min(postCount))
-	} else {
-		pagePosts = s.postRepo.GetTopPosts(5)
-	}
-
-	s.render(w, http.StatusOK, "home", models.PostListData{Posts: pagePosts})
+	s.render(w, http.StatusOK, "home", models.PostListData{Posts: s.postRepo.GetTopPosts(5)})
 }
 
 // about handler renders the about page
@@ -60,7 +50,6 @@ func (s *Server) listPostHandler(w http.ResponseWriter, r *http.Request) {
 	pagination := models.NewPagination(page, s.cfg.PostsPerPage, s.postRepo.Count())
 	start := pagination.PostsStart
 	end := pagination.PostsEnd
-	//fmt.Printf("start %d end %d %v", start, end, pagination)
 	s.render(w, http.StatusOK, "posts", models.PostListData{
 		Posts:      s.postRepo.GetPostsBetweenRange(start, end),
 		Pagination: pagination,
@@ -96,25 +85,12 @@ func (s *Server) projectsHandler(w http.ResponseWriter, r *http.Request) {
 	s.render(w, http.StatusOK, "projects", nil)
 }
 
-// rssHandler generates and writes an RSS XML feed built from the slication's markdown cache.
-// It iterates over s.markdownCache, converts each post's metadata into a models.Item
-// (Title from post.Metadata.Title, Link from post.Metadata.Slug, Description from post.Metadata.Summary,
-// Category set to "blog", GUID generated via uuid.New()), and collects those items into a models.RSS
-// feed with feed-level metadata (Title "Josh's Blog", Link "https://localhost:3999", Description,
-// Language "English", PubDate set to time.Now(), Category "blog").
-// The final feed is marshaled to XML and written to the response with Content-Type "slication/xml".
-// If XML marshaling fails the error is logged using s.logger.Error and the handler returns
-// without writing a response body or setting an explicit HTTP status code.
-//
-// Notes:
-//   - The request parameter r is not used by this handler beyond satisfying the http.Handler signature.
-//   - The handler does not write an explicit HTTP status code on success, does not include an XML
-//     declaration header, and assumes s.markdownCache can be safely read without additional locking.
+// rssHandler writes an RSS 2.0 XML feed of all posts.
 func (s *Server) rssHandler(w http.ResponseWriter, r *http.Request) {
 	items := []models.Item{}
 	feedData := models.RSS{
 		Title:       s.cfg.SiteTitle,
-		Link:        "https://localhost:3999",
+		Link:        s.cfg.BaseURL,
 		Description: s.cfg.Description,
 		Language:    "English",
 		PubDate:     time.Now(),
@@ -146,12 +122,6 @@ func (s *Server) rssHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-// searchHandler handles HTTP requests that perform a search for posts.
-// It extracts the "q" query parameter from the request URL, invokes the
-// application's post repository to search for matching posts, and renders
-// the "search" template with a data object containing the found posts and
-// the original search term. Rendering errors are logged via the application's
-// logger. The handler writes the rendered output to the provided http.ResponseWriter.
 func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 	term := r.URL.Query().Get("q")
 
@@ -168,15 +138,7 @@ func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 
 	results := s.postRepo.SearchPosts(term)
 
-	data := struct {
-		Posts []models.Post
-		Term  string
-	}{
-		Posts: results,
-		Term:  term,
-	}
-
-	s.render(w, http.StatusOK, "search", data)
+	s.render(w, http.StatusOK, "search", models.SearchData{Posts: results, Term: term})
 }
 
 // isValidSlug reports whether slug is a non-empty, ASCII-only slug suitable for URLs

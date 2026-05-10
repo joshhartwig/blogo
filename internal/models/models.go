@@ -14,6 +14,12 @@ type PostListData struct {
 	Pagination Pagination
 }
 
+// SearchData carries search results and the original query term.
+type SearchData struct {
+	Posts []Post
+	Term  string
+}
+
 // Post represents a blog post, containing its metadata and HTML content.
 type Post struct {
 	Metadata PostMetadata
@@ -73,22 +79,6 @@ func NewPagination(currentPage, postsPerPage, postCount int) Pagination {
 
 func getPageCount(postCount, postsPerPage int) int {
 	return (postCount + postsPerPage - 1) / postsPerPage
-}
-
-// min returns the smaller of two integers a and b.
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-// max returns the greater of two integer values a and b.
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }
 
 // PostMetadata represents the metadata associated with a blog post, including its title,

@@ -23,9 +23,14 @@ func NewPostRepository(fs fs.FS) (*Repository, error) {
 
 	slices.SortFunc(posts, sortPostsByDate)
 
+	bySlug := make(map[string]models.Post, len(posts))
+	for _, p := range posts {
+		bySlug[p.Metadata.Slug] = p
+	}
+
 	return &Repository{
 		Posts:  posts,
-		bySlug: make(map[string]models.Post),
+		bySlug: bySlug,
 	}, nil
 }
 
@@ -166,16 +171,11 @@ func (r *Repository) GetAllPostsInOrder() []models.Post {
 }
 
 func (r *Repository) GetPostBySlug(slug string) (models.Post, error) {
-	bySlug := make(map[string]models.Post)
-	for _, post := range r.Posts {
-		bySlug[post.Metadata.Slug] = post
-	}
-
-	found, ok := bySlug[slug]
+	post, ok := r.bySlug[slug]
 	if !ok {
 		return models.Post{}, errors.New("no post found")
 	}
-	return found, nil
+	return post, nil
 }
 
 func (r *Repository) Count() int {
